@@ -4,28 +4,50 @@
 
 :root {
   color-scheme: light;
-  --color-primary: #2563EB;
-  --color-primary-hover: #1D4ED8;
-  --color-secondary: #334155;
-  --color-accent: #14B8A6;
-  --color-background: #F5F5F5;
-  --color-surface: #FFFFFF;
-  --color-border: #E5E7EB;
-  --color-heading: #0F172A;
+
+  /* Brand */
+  --color-primary: #0050cf;
+  --color-primary-hover: #0044b3;
+  --color-primary-soft: #eaf2ff;
+
+  --color-accent: #f7d719;
+  --color-accent-soft: #fff8bf;
+
+  /* Light Theme */
+  --color-background: #f6fafb;
+  --color-background-soft: #eef6f8;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f8fafc;
+
+  --color-border: #e2e8f0;
+  --color-border-soft: #edf2f7;
+
+  --color-heading: #0b2b3f;
   --color-body: #475569;
-  --color-muted: #64748B;
+  --color-muted: #64748b;
+
+  --shadow-card: 0 18px 45px rgba(15, 23, 42, 0.07);
+  --shadow-soft: 0 10px 28px rgba(15, 23, 42, 0.05);
 }
 
 html.dark {
   color-scheme: dark;
-  --color-background: #0B1220;
-  --color-surface: #111827;
-  --color-border: #1F2937;
-  --color-heading: #F8FAFC;
-  --color-body: #CBD5E1;
-  --color-muted: #94A3B8;
-}
 
+  --color-background: #0b1220;
+  --color-background-soft: #111827;
+  --color-surface: #111827;
+  --color-surface-soft: #0f172a;
+
+  --color-border: #1f2937;
+  --color-border-soft: #243244;
+
+  --color-heading: #f8fafc;
+  --color-body: #cbd5e1;
+  --color-muted: #94a3b8;
+
+  --shadow-card: none;
+  --shadow-soft: none;
+}
 html,
 body,
 #root {

@@ -8,7 +8,6 @@ import {
     FileText,
     LineChart,
     PlayCircle,
-    Sparkles,
     Star,
     Users,
 } from "lucide-react";
@@ -33,20 +32,20 @@ const heroFeatures = [
 export function HomeHero() {
     return (
         <section className="relative overflow-hidden bg-transparent">
-            <div className="pointer-events-none absolute -right-28 top-10 h-80 w-80 rounded-full bg-[#E8F8FA] blur-3xl" />
-            <div className="pointer-events-none absolute -left-28 bottom-10 h-80 w-80 rounded-full bg-[#FFF5DF] blur-3xl" />
+            <div className="pointer-events-none absolute -right-28 top-10 h-80 w-80 rounded-full bg-[#E8F8FA] blur-3xl dark:bg-cyan-400/10" />
+            <div className="pointer-events-none absolute -left-28 bottom-10 h-80 w-80 rounded-full bg-[#FFF5DF] blur-3xl dark:bg-yellow-300/10" />
 
             <div className="relative mx-auto grid max-w-7xl gap-12 px-4 py-12 sm:px-6 lg:grid-cols-2 lg:px-8 lg:py-16">
                 <div className="order-2 flex flex-col justify-center text-center lg:order-1 lg:col-start-1 lg:text-right">
-                    <h1 className="text-4xl font-black leading-tight text-[#0B2B3F] sm:text-5xl lg:text-6xl">
+                    <h1 className="text-4xl font-black leading-tight text-[#0B2B3F] transition-colors sm:text-5xl lg:text-6xl dark:text-slate-50">
                         أ. أحمد المسعود
                     </h1>
 
-                    <h2 className="mt-4 text-2xl font-black text-[#C39135] sm:text-3xl">
+                    <h2 className="mt-4 text-2xl font-black text-[#C39135] transition-colors sm:text-3xl dark:text-yellow-300">
                         مدرس اللغة العربية للمرحلة الثانوية
                     </h2>
 
-                    <div className="mx-auto mt-6 min-h-[108px] max-w-2xl text-base font-medium leading-9 text-[#41596B] lg:mx-0">
+                    <div className="mx-auto mt-6 min-h-[108px] max-w-2xl text-base font-medium leading-9 text-[#41596B] transition-colors lg:mx-0 dark:text-slate-300">
                         <TypeAnimation
                             sequence={[
                                 "تبسيط النحو والبلاغة والنصوص بطريقة منظمة وسهلة.",
@@ -64,10 +63,10 @@ export function HomeHero() {
                         />
                     </div>
 
-                    <div className="flex  justify-start gap-3 animate-fade-up">
+                    <div className="flex justify-center gap-3  lg:justify-start">
                         <Link
                             to="/subjects"
-                            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#075B78] px-7 py-4 text-sm font-black text-white shadow-xl shadow-[#075B78]/20 transition hover:-translate-y-0.5 hover:bg-[#064B64]"
+                            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#075B78] px-7 py-4 text-sm font-black text-white shadow-xl shadow-[#075B78]/20 transition hover:-translate-y-0.5 hover:bg-[#064B64] dark:bg-cyan-500 dark:text-slate-950 dark:shadow-none dark:hover:bg-cyan-400"
                         >
                             ابدأ
                             <ArrowLeft size={18} />
@@ -75,23 +74,23 @@ export function HomeHero() {
 
                         <Link
                             to="/#intro"
-                            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-[#C9DDE9] bg-white px-7 py-4 text-sm font-black text-gold-600 shadow-sm transition hover:-translate-y-0.5 hover:border-[#0B6F7A] hover:text-[#0B6F7A]"
+                            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-[#C9DDE9] bg-white px-7 py-4 text-sm font-black text-[#C39135] shadow-sm transition hover:-translate-y-0.5 hover:border-[#0B6F7A] hover:text-[#0B6F7A] dark:border-slate-700 dark:bg-slate-900 dark:text-yellow-300 dark:hover:border-cyan-400 dark:hover:bg-slate-800 dark:hover:text-cyan-300"
                         >
                             <PlayCircle size={19} />
                             شاهد الدرس التعريفي
                         </Link>
                     </div>
 
-                    <div className="mt-10 grid gap-3 rounded-[2rem] border border-[#DCEAF3] bg-white/80 p-3 shadow-xl shadow-[#0B5F7A]/10 backdrop-blur-xl sm:grid-cols-3">
+                    <div className="mt-10 grid gap-3 rounded-[2rem] border border-[#DCEAF3] bg-white/80 p-3 shadow-xl shadow-[#0B5F7A]/10 backdrop-blur-xl transition-colors sm:grid-cols-3 dark:border-slate-700 dark:bg-slate-900/75 dark:shadow-none">
                         {heroFeatures.map((feature) => {
                             const Icon = feature.icon;
 
                             return (
                                 <div
                                     key={feature.title}
-                                    className="flex items-center justify-center gap-3 rounded-2xl bg-[#F7FBFF] px-4 py-4 text-[#0B2B3F]"
+                                    className="flex items-center justify-center gap-3 rounded-2xl bg-[#F7FBFF] px-4 py-4 text-[#0B2B3F] transition-colors dark:bg-slate-800/80 dark:text-slate-100"
                                 >
-                                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gold-400 text-[#0B6F7A] shadow-sm animate-[spin_5s_linear_infinite] ">
+                                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gold-400 text-[#0B6F7A] shadow-sm animate-[spin_5s_linear_infinite] dark:bg-yellow-300 dark:text-slate-950">
                                         <Icon size={21} />
                                     </span>
 
@@ -118,10 +117,10 @@ function HeroVisual() {
     const teacherImage = "/images/heroImage.png";
 
     return (
-        <div className="relative mx-auto max-w-xl ">
-            <div className="pointer-events-none absolute inset-0 -z-10 rounded-full bg-[#E8F8FA] blur-3xl" />
+        <div className="relative mx-auto max-w-xl">
+            <div className="pointer-events-none absolute inset-0 -z-10 rounded-full bg-[#E8F8FA] blur-3xl dark:bg-cyan-400/10" />
 
-            <div className="absolute -inset-6 rounded-[3rem] border border-dashed border-[#C39135]/40 [animation:spin_18s_linear_infinite]" />
+            <div className="absolute -inset-6 rounded-[3rem] border border-dashed border-[#C39135]/40 [animation:spin_18s_linear_infinite] dark:border-yellow-300/30" />
 
             <div className="absolute -inset-10 [animation:spin_15s_linear_infinite_reverse]">
                 <OrbitItem className="absolute right-4 top-10" icon={Award} color="#C39135" />
@@ -130,33 +129,41 @@ function HeroVisual() {
             </div>
 
             <div className="relative [animation:hero-float_5s_ease-in-out_infinite]">
-                <div className="relative rounded-[2.7rem] border border-[#DCEAF3] bg-white/55 p-4 shadow-2xl shadow-[#0B5F7A]/10 backdrop-blur-xl sm:p-5">
-                    <div className="absolute -right-3 top-10 z-20 hidden rounded-2xl border border-[#DCEAF3] bg-white px-4 py-3 shadow-xl shadow-[#0B5F7A]/10 sm:block">
+                <div className="relative rounded-[2.7rem] border border-[#DCEAF3] bg-white/55 p-4 shadow-2xl shadow-[#0B5F7A]/10 backdrop-blur-xl transition-colors sm:p-5 dark:border-slate-700 dark:bg-slate-900/55 dark:shadow-none">
+                    <div className="absolute -right-3 top-10 z-20 hidden rounded-2xl border border-[#DCEAF3] bg-white px-4 py-3 shadow-xl shadow-[#0B5F7A]/10 transition-colors sm:block dark:border-slate-700 dark:bg-slate-900 dark:shadow-none">
                         <div className="flex items-center gap-2">
-                            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FDF8EC] text-[#C39135] animate-bounce">
+                            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FDF8EC] text-[#C39135] animate-bounce dark:bg-yellow-300/15 dark:text-yellow-300">
                                 <Star size={18} fill="currentColor" />
                             </span>
                             <div>
-                                <p className="text-xs font-black text-[#0B2B3F]">شرح مبسط</p>
-                                <p className="text-[11px] font-bold text-[#6B8293]">خطوة بخطوة</p>
+                                <p className="text-xs font-black text-[#0B2B3F] dark:text-slate-50">
+                                    شرح مبسط
+                                </p>
+                                <p className="text-[11px] font-bold text-[#6B8293] dark:text-slate-400">
+                                    خطوة بخطوة
+                                </p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="absolute -left-3 bottom-24 z-20 hidden rounded-2xl border border-[#DCEAF3] bg-white px-4 py-3 shadow-xl shadow-[#0B5F7A]/10 sm:block">
+                    <div className="absolute -left-3 bottom-24 z-20 hidden rounded-2xl border border-[#DCEAF3] bg-white px-4 py-3 shadow-xl shadow-[#0B5F7A]/10 transition-colors sm:block dark:border-slate-700 dark:bg-slate-900 dark:shadow-none">
                         <div className="flex items-center gap-2">
-                            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#E8F8FA] text-[#0B6F7A]">
+                            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#E8F8FA] text-[#0B6F7A] dark:bg-cyan-400/15 dark:text-cyan-300">
                                 <CheckCircle2 size={18} />
                             </span>
                             <div>
-                                <p className="text-xs font-black text-[#0B2B3F]">متابعة مستمرة</p>
-                                <p className="text-[11px] font-bold text-[#6B8293]">اختبارات ونتائج</p>
+                                <p className="text-xs font-black text-[#0B2B3F] dark:text-slate-50">
+                                    متابعة مستمرة
+                                </p>
+                                <p className="text-[11px] font-bold text-[#6B8293] dark:text-slate-400">
+                                    اختبارات ونتائج
+                                </p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="relative overflow-visible rounded-[2rem] bg-gradient-to-b from-[#EAF7FC] via-white to-[#FFF8E9] p-5 sm:p-6">
-                        <div className="relative mx-auto overflow-hidden rounded-[2rem] border-[6px] border-white bg-[#DDEFF7] shadow-2xl shadow-[#0B5F7A]/15 sm:h-[440px]">
+                    <div className="relative overflow-visible rounded-[2rem] bg-gradient-to-b from-[#EAF7FC] via-white to-[#FFF8E9] p-5 transition-colors sm:p-6 dark:from-slate-800 dark:via-slate-900 dark:to-slate-950">
+                        <div className="relative mx-auto overflow-hidden rounded-[2rem] border-[6px] border-white bg-[#DDEFF7] shadow-2xl shadow-[#0B5F7A]/15 transition-colors sm:h-[440px] dark:border-slate-800 dark:bg-slate-800 dark:shadow-none">
                             {!imageError ? (
                                 <img
                                     src={teacherImage}
@@ -165,16 +172,16 @@ function HeroVisual() {
                                     className="h-full w-full object-cover object-top"
                                 />
                             ) : (
-                                <div className="flex h-full w-full items-center justify-center bg-gradient-to-b from-[#075B78] to-[#0B2B3F]">
+                                <div className="flex h-full w-full items-center justify-center bg-gradient-to-b from-[#075B78] to-[#0B2B3F] dark:from-cyan-700 dark:to-slate-950">
                                     <span className="text-7xl font-black text-white">أ</span>
                                 </div>
                             )}
 
-                            <div className="absolute inset-x-4 bottom-2 rounded-[4.5rem] bg-white/30 p-4 text-center shadow-2xl backdrop-blur-md">
-                                <h3 className="text-xl font-black text-[#0B2B3F]">
+                            <div className="absolute inset-x-4 bottom-2 rounded-[4.5rem] bg-white/30 p-4 text-center shadow-2xl backdrop-blur-md transition-colors dark:bg-slate-950/40 dark:shadow-none">
+                                <h3 className="text-xl font-black text-[#0B2B3F] dark:text-slate-50">
                                     أ. أحمد المسعود
                                 </h3>
-                                <p className="mt-1 text-md font-black text-[#C39135]">
+                                <p className="mt-1 text-md font-black text-[#C39135] dark:text-yellow-300">
                                     مدرس اللغة العربية للمرحلة الثانوية
                                 </p>
                             </div>
@@ -189,7 +196,7 @@ function HeroVisual() {
 function OrbitItem({ icon: Icon, color, className }) {
     return (
         <div
-            className={`${className} flex h-12 w-12 items-center justify-center rounded-2xl border border-white bg-white shadow-xl`}
+            className={`${className} flex h-12 w-12 items-center justify-center rounded-2xl border border-white bg-white shadow-xl transition-colors dark:border-slate-700 dark:bg-slate-900 dark:shadow-none`}
             style={{ color }}
         >
             <Icon size={22} />
