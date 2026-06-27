@@ -1,0 +1,193 @@
+import { useRef } from "react";
+import {
+    ArrowLeft,
+    BookOpenCheck,
+    ChevronLeft,
+    ChevronRight,
+    Star,
+} from "lucide-react";
+import { Link } from "react-router-dom";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, A11y } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/navigation";
+
+export function HomeCoursesPreview({ courses = [] }) {
+    const prevRef = useRef(null);
+    const nextRef = useRef(null);
+
+    if (!courses.length) return null;
+
+    return (
+        <section className="bg-transparent px-4 py-16 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-7xl">
+                <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+                    <div>
+                        <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-[#D9EAF2] bg-gold-300 px-4 py-2 text-sm font-black text-[#0B6F7A] shadow-sm">
+                            <BookOpenCheck size={16} />
+                            الكورسات المتاحة
+                        </div>
+
+                        <h2 className="text-3xl font-black text-[#0B2B3F] sm:text-4xl">
+                            كورسات اللغة العربية
+                        </h2>
+
+                        <p className="mt-4 max-w-2xl text-base font-medium leading-8 text-[#587083]">
+                            اختر الصف المناسب وابدأ في مسار منظم يحتوي على دروس واختبارات
+                            وموارد.
+                        </p>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                        <button
+                            ref={prevRef}
+                            type="button"
+                            className="hidden h-12 w-12 items-center justify-center rounded-2xl border border-[#C9DDE9] bg-white text-[#0B2B3F] transition hover:border-[#0B6F7A] hover:text-[#0B6F7A] disabled:cursor-not-allowed disabled:opacity-40 md:inline-flex"
+                            aria-label="السابق"
+                        >
+                            <ChevronRight size={20} />
+                        </button>
+
+                        <button
+                            ref={nextRef}
+                            type="button"
+                            className="hidden h-12 w-12 items-center justify-center rounded-2xl border border-[#C9DDE9] bg-white text-[#0B2B3F] transition hover:border-[#0B6F7A] hover:text-[#0B6F7A] disabled:cursor-not-allowed disabled:opacity-40 md:inline-flex"
+                            aria-label="التالي"
+                        >
+                            <ChevronLeft size={20} />
+                        </button>
+
+                        <Link
+                            to="/subjects"
+                            className="inline-flex w-fit items-center gap-2 rounded-2xl border border-[#C9DDE9] bg-white px-6 py-3 text-sm font-black text-[#0B2B3F] transition hover:border-[#0B6F7A] hover:text-[#0B6F7A]"
+                        >
+                            كل الكورسات
+                            <ArrowLeft size={16} />
+                        </Link>
+                    </div>
+                </div>
+
+                <Swiper
+                    dir="rtl"
+                    modules={[Navigation, A11y]}
+                    speed={450}
+                    grabCursor
+                    watchOverflow
+                    spaceBetween={20}
+                    slidesPerView={1.08}
+                    onBeforeInit={(swiper) => {
+                        swiper.params.navigation.prevEl = prevRef.current;
+                        swiper.params.navigation.nextEl = nextRef.current;
+                    }}
+                    navigation={{
+                        prevEl: prevRef.current,
+                        nextEl: nextRef.current,
+                    }}
+                    breakpoints={{
+                        640: {
+                            slidesPerView: 1.6,
+                            spaceBetween: 20,
+                        },
+                        768: {
+                            slidesPerView: 2.15,
+                            spaceBetween: 20,
+                        },
+                        1024: {
+                            slidesPerView: 3,
+                            spaceBetween: 20,
+                        },
+                    }}
+                    className="!pb-4"
+                >
+                    {courses.map((course) => {
+                        const imageSrc =
+                            course.imageUrl ||
+                            course.coverImageUrl ||
+                            course.thumbnailUrl ||
+                            course.image ||
+                            course.bannerUrl ||
+                            "https://quranteacheracademy.com/wp-content/uploads/2024/04/%D8%AF%D9%88%D8%B1%D8%A7%D8%AA-%D8%A7%D9%84%D9%84%D8%BA%D8%A9-%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9.jpg";
+
+                        return (
+                            <SwiperSlide key={course.id} className="!h-auto">
+                                <article className="group flex h-full flex-col overflow-hidden rounded-[2rem] border border-[#DCEAF3] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#0B5F7A]/10">
+                                    <div className="relative h-52 overflow-hidden bg-[#EFF7FA]">
+                                        {imageSrc ? (
+                                            <img
+                                                src={imageSrc}
+                                                alt={course.name || "صورة الكورس"}
+                                                loading="lazy"
+                                                className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                                            />
+                                        ) : (
+                                            <div className="flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_top_right,rgba(11,111,122,0.24),transparent_35%),linear-gradient(135deg,#F3FAFC,#EAF5F8)]">
+                                                <BookOpenCheck
+                                                    size={54}
+                                                    className="text-[#0B6F7A]"
+                                                />
+                                            </div>
+                                        )}
+
+                                        <div className="absolute inset-0 bg-gradient-to-t from-[#071F2F]/60 via-[#071F2F]/5 to-transparent" />
+
+                                        <span className="absolute bottom-4 right-4 rounded-full bg-white/95 px-4 py-2 text-xs font-black text-[#0B6F7A] shadow-sm">
+                                            {course.level || "منهج كامل"}
+                                        </span>
+
+                                        <span className="absolute bottom-4 left-4 flex items-center gap-1 rounded-full bg-white/95 px-3 py-2 text-sm font-black text-[#C39135] shadow-sm">
+                                            <Star size={15} fill="currentColor" />
+                                            {course.rating || "5.0"}
+                                        </span>
+                                    </div>
+
+                                    <div className="flex flex-1 flex-col p-6">
+                                        <h3 className="line-clamp-2 text-xl font-black text-[#0B2B3F]">
+                                            {course.name}
+                                        </h3>
+
+                                        <p className="mt-2 min-h-[84px] text-sm font-medium leading-7 text-[#587083] line-clamp-3">
+                                            {course.description}
+                                        </p>
+
+                                        <div className=" grid grid-cols-3 gap-2 rounded-2xl bg-[#F7FBFF] p-3 text-center">
+                                            <CourseMiniStat
+                                                value={course.lessonsCount || 0}
+                                                label="درس"
+                                            />
+                                            <CourseMiniStat
+                                                value={course.quizzesCount || 0}
+                                                label="اختبار"
+                                            />
+                                            <CourseMiniStat
+                                                value={course.studentsCount || 0}
+                                                label="طالب"
+                                            />
+                                        </div>
+
+                                        <Link
+                                            to={`/subjects/${course.id}`}
+                                            className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#075B78] px-5 py-3 text-sm font-black text-white shadow-lg shadow-[#075B78]/15 transition hover:bg-[#064B64]"
+                                        >
+                                            عرض الكورس
+                                            <ArrowLeft size={16} />
+                                        </Link>
+                                    </div>
+                                </article>
+                            </SwiperSlide>
+                        );
+                    })}
+                </Swiper>
+            </div>
+        </section>
+    );
+}
+
+function CourseMiniStat({ value, label }) {
+    return (
+        <div>
+            <p className="text-base font-black text-[#0B2B3F]">{value}</p>
+            <p className="mt-1 text-[11px] font-bold text-[#6B8293]">{label}</p>
+        </div>
+    );
+}

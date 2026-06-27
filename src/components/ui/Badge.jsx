@@ -1,0 +1,14 @@
+const tones = {
+  default: 'border-ink-200 bg-ink-50 text-ink-700 before:bg-ink-400',
+  brand: 'border-brand-100 bg-brand-50 text-brand-700 before:bg-brand-600',
+  success: 'border-emerald-100 bg-emerald-50 text-emerald-700 before:bg-emerald-500',
+  warning: 'border-amber-100 bg-amber-50 text-amber-700 before:bg-amber-500',
+  danger: 'border-red-100 bg-red-50 text-red-700 before:bg-red-500',
+  info: 'border-sky-100 bg-sky-50 text-sky-700 before:bg-sky-500'
+}
+
+export const Badge = ({ tone = 'default', children, className = '' }) => (
+  <span className={`chip before:h-1.5 before:w-1.5 before:rounded-full ${tones[tone] || tones.default} ${className}`}>
+    {children}
+  </span>
+)
