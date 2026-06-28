@@ -128,7 +128,7 @@ function GradeCard({ grade }) {
                 </h2>
 
                 <p
-                    className="mt-2 text-sm font-black dark:text-yellow-300"
+                    className="mt-2 text-sm font-black "
                     style={{ color: grade.color }}
                 >
                     {grade.subtitle}

@@ -21,7 +21,7 @@ export function HomeFinalCta() {
                 <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
                     <Link
                         to="/subjects"
-                        className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#F0C66B] px-7 py-4 text-sm font-black text-[#06263D] transition hover:-translate-y-0.5"
+                        className="inline-flex items-center justify-center gap-2 rounded-2xl bg-cyan-400 px-7 py-4 text-sm font-black text-[#06263D] transition hover:-translate-y-0.5"
                     >
                         اشترك الآن
                         <ArrowLeft size={18} />

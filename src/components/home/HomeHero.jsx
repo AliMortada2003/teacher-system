@@ -41,7 +41,7 @@ export function HomeHero() {
                         أ. أحمد المسعود
                     </h1>
 
-                    <h2 className="mt-4 text-2xl font-black text-[#C39135] transition-colors sm:text-3xl dark:text-yellow-300">
+                    <h2 className="mt-4 text-2xl font-black text-[#089cc9] transition-colors sm:text-3xl ">
                         مدرس اللغة العربية للمرحلة الثانوية
                     </h2>
 
@@ -74,7 +74,7 @@ export function HomeHero() {
 
                         <Link
                             to="/#intro"
-                            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-[#C9DDE9] bg-white px-7 py-4 text-sm font-black text-[#C39135] shadow-sm transition hover:-translate-y-0.5 hover:border-[#0B6F7A] hover:text-[#0B6F7A] dark:border-slate-700 dark:bg-slate-900 dark:text-yellow-300 dark:hover:border-cyan-400 dark:hover:bg-slate-800 dark:hover:text-cyan-300"
+                            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-[#C9DDE9] bg-white px-7 py-4 text-sm font-black shadow-sm transition hover:-translate-y-0.5 hover:border-[#0B6F7A] hover:text-[#0B6F7A] dark:border-slate-700 dark:bg-slate-900  dark:hover:border-cyan-400 dark:hover:bg-slate-800 dark:hover:text-cyan-300"
                         >
                             <PlayCircle size={19} />
                             شاهد الدرس التعريفي
@@ -90,7 +90,7 @@ export function HomeHero() {
                                     key={feature.title}
                                     className="flex items-center justify-center gap-3 rounded-2xl bg-[#F7FBFF] px-4 py-4 text-[#0B2B3F] transition-colors dark:bg-slate-800/80 dark:text-slate-100"
                                 >
-                                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gold-400 text-[#0B6F7A] shadow-sm animate-[spin_5s_linear_infinite] dark:bg-yellow-300 dark:text-slate-950">
+                                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-cyan-200 dark:bg-cyan-400 text-[#0B6F7A] shadow-sm animate-[spin_5s_linear_infinite]  dark:text-slate-950">
                                         <Icon size={21} />
                                     </span>
 
@@ -181,7 +181,7 @@ function HeroVisual() {
                                 <h3 className="text-xl font-black text-[#0B2B3F] dark:text-slate-50">
                                     أ. أحمد المسعود
                                 </h3>
-                                <p className="mt-1 text-md font-black text-[#C39135] dark:text-yellow-300">
+                                <p className="mt-1 text-md font-black text-[#088e9d] dark:text-cyan-300">
                                     مدرس اللغة العربية للمرحلة الثانوية
                                 </p>
                             </div>

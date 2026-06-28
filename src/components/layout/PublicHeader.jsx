@@ -104,7 +104,7 @@ export function PublicHeader() {
                         <BookOpenCheck size={25} />
                     </span>
 
-                    <span className="text-2xl font-black tracking-tight text-[#0B2B3F] dark:text-slate-50">
+                    <span className="text-2xl font-black tracking-tight text-[#009dff] dark:text-slate-50">
                         <span className="text-cyan-500 dark:text-cyan-300">
                             الأوائل
                         </span>
@@ -122,20 +122,11 @@ export function PublicHeader() {
                                 className={[
                                     "group relative py-2 text-sm font-bold transition",
                                     active
-                                        ? "text-[#0B6F7A] dark:text-cyan-300"
+                                        ? "bg-cyan-600 text-white rounded-lg px-2 "
                                         : "text-[#304A5F] hover:text-[#0B6F7A] dark:text-slate-300 dark:hover:text-cyan-300",
                                 ].join(" ")}
                             >
                                 {item.label}
-
-                                <span
-                                    className={[
-                                        "absolute -bottom-1 right-1/2 h-0.5 w-7 translate-x-1/2 rounded-full bg-[#C39135] transition dark:bg-yellow-300",
-                                        active
-                                            ? "opacity-100"
-                                            : "opacity-0 group-hover:opacity-100",
-                                    ].join(" ")}
-                                />
                             </Link>
                         );
                     })}

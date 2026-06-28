@@ -1,4 +1,5 @@
 import {
+    BookOpenCheck,
     ClipboardCheck,
     CloudDownload,
     Download,
@@ -8,50 +9,45 @@ import {
 
 const resources = [
     {
-        title: "ملفات PDF",
-        description: "ملخصات وشروحات منظمة قابلة للتحميل في أي وقت.",
+        title: "ملخصات داخل المنصة",
+        description: "ملخصات منظمة تظهر للطالب داخل حسابه لمراجعة أهم نقاط الدرس.",
         icon: FileText,
         accent: "#0B6F7A",
         soft: "#E8F8FA",
-        glow: "rgba(11,111,122,0.16)",
-        tag: "ملخصات منظمة",
+        tag: "مراجعة سريعة",
     },
     {
-        title: "أوراق عمل",
-        description: "تدريبات تطبيقية بعد كل درس لتثبيت الفهم.",
+        title: "تدريبات تفاعلية",
+        description: "أسئلة وتطبيقات بعد كل درس تساعد الطالب يثبت الفهم خطوة بخطوة.",
         icon: PenLine,
         accent: "#C39135",
         soft: "#FFF5DF",
-        glow: "rgba(195,145,53,0.20)",
-        tag: "تدريب عملي",
+        tag: "تطبيق عملي",
     },
     {
-        title: "مراجعات نهائية",
-        description: "مراجعات مركزة قبل الاختبارات بأهم النقاط.",
-        icon: Download,
+        title: "مراجعات منظمة",
+        description: "مراجعات مركزة قبل الاختبارات داخل المنصة بدون تحميل مباشر.",
+        icon: BookOpenCheck,
         accent: "#4F46E5",
         soft: "#EEF2FF",
-        glow: "rgba(79,70,229,0.16)",
         tag: "قبل الامتحان",
     },
     {
-        title: "بنك أسئلة",
-        description: "أسئلة متنوعة على أجزاء المنهج مع مستوى متدرج.",
+        title: "بنك أسئلة محمي",
+        description: "أسئلة متنوعة بمستويات مختلفة تظهر للطالب حسب الصف والكورس.",
         icon: ClipboardCheck,
         accent: "#16A34A",
         soft: "#ECFDF3",
-        glow: "rgba(22,163,74,0.16)",
         tag: "تقييم مستمر",
     },
 ];
+
 
 export function HomeResources() {
     return (
         <section className="relative overflow-hidden bg-white/75 px-4 py-20 backdrop-blur-sm transition-colors duration-300 sm:px-6 lg:px-8 dark:bg-slate-950/45">
             <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#DCEAF3] to-transparent dark:via-white/10" />
-            <div className="pointer-events-none absolute -right-24 top-10 h-72 w-72 rounded-full bg-[#E8F8FA] blur-3xl dark:bg-cyan-400/10" />
-            <div className="pointer-events-none absolute -left-24 bottom-0 h-72 w-72 rounded-full bg-[#FFF5DF] blur-3xl dark:bg-yellow-300/10" />
-
+            
             <div className="relative mx-auto max-w-7xl">
                 <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
                     <div>
@@ -61,7 +57,7 @@ export function HomeResources() {
                         </div>
 
                         <h2 className="text-3xl font-black text-[#0B2B3F] transition-colors sm:text-4xl dark:text-slate-50">
-                            دروس وموارد قابلة للتحميل
+                            دروس ومذكرات بجودة عالية
                         </h2>
 
                         <p className="mt-4 max-w-2xl text-base font-medium leading-8 text-[#587083] transition-colors dark:text-slate-300">
@@ -106,7 +102,7 @@ export function HomeResources() {
                                 <div className="relative">
                                     <div className="flex items-start justify-between gap-3">
                                         <div
-                                            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[1.35rem] shadow-sm ring-8 ring-white transition-colors dark:ring-slate-900"
+                                            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[1.35rem] shadow-sm ring-8 ring-white  transition-colors dark:ring-slate-900"
                                             style={{
                                                 backgroundColor: resource.soft,
                                                 color: resource.accent,
