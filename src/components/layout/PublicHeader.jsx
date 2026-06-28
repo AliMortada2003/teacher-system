@@ -133,15 +133,6 @@ export function PublicHeader() {
                 </nav>
 
                 <div className="hidden items-center gap-3 lg:flex">
-                    <button
-                        type="button"
-                        onClick={toggleTheme}
-                        className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-[#D6E4EE] bg-white text-[#0B2B3F] shadow-sm transition hover:-translate-y-0.5 hover:border-[#0B6F7A] hover:bg-[#F0FAFC] hover:text-[#0B6F7A] dark:border-slate-700 dark:bg-slate-900 dark:text-yellow-300 dark:hover:border-yellow-300/50 dark:hover:bg-slate-800"
-                        aria-label={isDark ? "تفعيل الوضع الفاتح" : "تفعيل الوضع الداكن"}
-                        title={isDark ? "الوضع الفاتح" : "الوضع الداكن"}
-                    >
-                        {isDark ? <Sun size={20} /> : <Moon size={20} />}
-                    </button>
                     {isLoggedIn ? (
                         <Link
                             to={dashboardPath}
@@ -187,7 +178,6 @@ export function PublicHeader() {
                     <nav className="mx-auto grid max-w-7xl gap-2">
                         {navItems.map((item) => {
                             const active = isActivePath(location, item.href);
-
                             return (
                                 <Link
                                     key={item.label}
@@ -204,7 +194,15 @@ export function PublicHeader() {
                                 </Link>
                             );
                         })}
-
+                        <button
+                            type="button"
+                            onClick={toggleTheme}
+                            className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-[#D6E4EE] bg-white text-[#0B2B3F] shadow-sm transition hover:-translate-y-0.5 hover:border-[#0B6F7A] hover:bg-[#F0FAFC] hover:text-[#0B6F7A] dark:border-slate-700 dark:bg-slate-900 dark:text-yellow-300 dark:hover:border-yellow-300/50 dark:hover:bg-slate-800"
+                            aria-label={isDark ? "تفعيل الوضع الفاتح" : "تفعيل الوضع الداكن"}
+                            title={isDark ? "الوضع الفاتح" : "الوضع الداكن"}
+                        >
+                            {isDark ? <Sun size={20} /> : <Moon size={20} />}
+                        </button>
                         <div className="mt-3 grid gap-3">
                             {isLoggedIn ? (
                                 <Link
