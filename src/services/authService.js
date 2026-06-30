@@ -13,11 +13,15 @@ export const authService = {
     const user = users.find((u) => u.email.toLowerCase() === email.trim().toLowerCase())
     if (!user) throw new Error('البريد الإلكتروني غير مسجل')
     if (user.password !== password) throw new Error('كلمة المرور غير صحيحة')
+    if (user.hidden) throw new Error('هذا الحساب غير نشط')
     if (user.role === ROLES.TEACHER && !singleInstructorService.isGlobalInstructor(user.id)) {
-      throw new Error('منصة المدرس الواحد مخصصة لحساب المدرس الرئيسي فقط')
+      throw new Error('هذا الحساب ليس حساب المدرس المالك')
     }
     if (user.role === ROLES.TEACHER && user.status !== TEACHER_STATUS.APPROVED) {
-      throw new Error('حساب المدرس الرئيسي غير مفعّل')
+      throw new Error('حساب المدرس المالك غير مفعّل')
+    }
+    if (user.role === ROLES.ASSISTANT && user.status === 'disabled') {
+      throw new Error('حساب المساعد موقوف')
     }
     const session = { id: uid('ses'), userId: user.id, createdAt: new Date().toISOString() }
     localStorage.setItem(SESSION_KEY, JSON.stringify(session))
@@ -60,7 +64,11 @@ export const authService = {
       if (!raw) return null
       const session = JSON.parse(raw)
       const user = db.find('users', session.userId)
-      if (user?.hidden || (user?.role === ROLES.TEACHER && !singleInstructorService.isGlobalInstructor(user.id))) {
+      if (
+        user?.hidden ||
+        (user?.role === ROLES.TEACHER && !singleInstructorService.isGlobalInstructor(user.id)) ||
+        (user?.role === ROLES.ASSISTANT && user.status === 'disabled')
+      ) {
         localStorage.removeItem(SESSION_KEY)
         return null
       }

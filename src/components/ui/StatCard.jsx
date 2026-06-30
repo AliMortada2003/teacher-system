@@ -13,7 +13,9 @@ import {
   Receipt,
   Trophy,
   Users,
+  UsersRound,
   Wallet,
+  ShieldCheck,
   XCircle
 } from 'lucide-react'
 
@@ -34,7 +36,9 @@ const ICONS = {
   Receipt,
   Trophy,
   Users,
+  UsersRound,
   Wallet,
+  ShieldCheck,
   XCircle
 }
 

@@ -11,13 +11,13 @@ import { ROLES } from '../../utils/constants.js'
 const HOME_BY_ROLE = {
   [ROLES.STUDENT]: '/student/dashboard',
   [ROLES.TEACHER]: '/teacher/dashboard',
-  [ROLES.ADMIN]: '/admin/dashboard'
+  [ROLES.ASSISTANT]: '/assistant/dashboard'
 }
 
 const DEMOS = [
   { label: 'طالب', email: 'student1@academy.sa', password: '123456' },
-  { label: 'المدرس', email: 'teacher1@academy.sa', password: '123456' },
-  { label: 'المالك', email: 'admin@academy.sa', password: '123456' }
+  { label: 'مساعد', email: 'assistant@academy.sa', password: '123456' },
+  { label: 'المدرس', email: 'teacher@academy.sa', password: '123456' }
 ]
 
 export default function Login() {

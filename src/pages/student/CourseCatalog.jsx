@@ -100,14 +100,24 @@ export default function CourseCatalog() {
               course={course}
               purchased={course.purchased}
               action={course.purchased ? (
-                  <Link to={`/student/subjects/${course.id}`} className="btn-outline">
-                    <CheckCircle2 size={16} />
-                    متابعة
-                  </Link>
+                  <div className="flex flex-wrap justify-end gap-2">
+                    <Link to={`/student/courses/${course.id}`} className="btn-outline">
+                      تفاصيل
+                    </Link>
+                    <Link to={`/student/subjects/${course.id}`} className="btn-primary">
+                      <CheckCircle2 size={16} />
+                      متابعة
+                    </Link>
+                  </div>
                 ) : (
-                  <Button icon={CreditCard} loading={loadingId === course.id} onClick={() => purchase(course.id)}>
-                    شراء
-                  </Button>
+                  <div className="flex flex-wrap justify-end gap-2">
+                    <Link to={`/student/courses/${course.id}`} className="btn-outline">
+                      تفاصيل
+                    </Link>
+                    <Button icon={CreditCard} loading={loadingId === course.id} onClick={() => purchase(course.id)}>
+                      شراء
+                    </Button>
+                  </div>
                 )}
             />
           ))}

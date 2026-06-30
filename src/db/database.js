@@ -2,10 +2,27 @@ import { seedData } from './seed.js'
 import { uid } from '../utils/id.js'
 
 const DB_KEY = 'academy_db_v1'
-const DB_VERSION = 2
+const DB_VERSION = 4
 
 const COURSE_LEVELS = ['مبتدئ', 'متوسط', 'متقدم']
 const COURSE_COLORS = ['#2563EB', '#F97316', '#334155', '#2563EB', '#F97316', '#334155', '#2563EB']
+const DEFAULT_VIDEO_LINKS = [
+  'https://www.youtube.com/watch?v=jNQXAC9IVRw',
+  'https://www.youtube.com/watch?v=ysz5S6PUM-U',
+  'https://www.youtube.com/watch?v=aqz-KE-bpKQ',
+  'https://www.youtube.com/watch?v=ScMzIvxBSi4',
+  'https://www.youtube.com/watch?v=YE7VzlLtp-4',
+  'https://www.youtube.com/watch?v=eIho2S0ZahI'
+]
+const DEFAULT_ASSISTANT = {
+  name: 'مساعد المدرس',
+  email: 'assistant@academy.sa',
+  password: '123456',
+  phone: '+20 10 1111 2222',
+  city: 'القاهرة',
+  bio: 'مساعد مسؤول عن إدارة الكورسات والدروس والاختبارات والحضور.'
+}
+const NON_ARABIC_SUBJECT_WORDS = ['الفيزياء', 'الكيمياء', 'الأحياء', 'البرمجة', 'الجيولوجيا', 'الفرنسية']
 const PLATFORM_NAME = 'منصة الأوائل'
 const PLATFORM_TAGLINE = 'عربي للثانوي مع مدرس واحد وخطة واضحة لكل صف'
 const GLOBAL_INSTRUCTOR = {
@@ -145,6 +162,38 @@ const defaultInstructorProfile = (instructor, current = {}) => ({
   avatar: current.avatar || instructor.avatar || null
 })
 
+const hasLegacySubjectText = (value) =>
+  NON_ARABIC_SUBJECT_WORDS.some((word) => String(value || '').includes(word))
+
+const ensureAssistantAccount = (data) => {
+  const users = ensureCollection(data, 'users')
+  const existing = users.find((user) => user.email?.toLowerCase() === DEFAULT_ASSISTANT.email)
+
+  if (existing) {
+    existing.role = 'assistant'
+    existing.status = existing.status === 'disabled' ? 'disabled' : 'active'
+    existing.hidden = false
+    existing.name = existing.name || DEFAULT_ASSISTANT.name
+    existing.password = existing.password || DEFAULT_ASSISTANT.password
+    existing.phone = existing.phone || DEFAULT_ASSISTANT.phone
+    existing.city = existing.city || DEFAULT_ASSISTANT.city
+    existing.bio = existing.bio || DEFAULT_ASSISTANT.bio
+    return existing
+  }
+
+  const assistant = {
+    id: uid('user'),
+    role: 'assistant',
+    status: 'active',
+    hidden: false,
+    avatar: null,
+    createdAt: new Date().toISOString(),
+    ...DEFAULT_ASSISTANT
+  }
+  users.push(assistant)
+  return assistant
+}
+
 const ensureSections = (data) => {
   const subjects = ensureCollection(data, 'subjects')
   const sections = ensureCollection(data, 'sections')
@@ -168,7 +217,17 @@ const ensureResources = (data) => {
   const resources = ensureCollection(data, 'resources')
 
   lessons.forEach((lesson) => {
-    if (lesson.resourceIds?.length) return
+    if (lesson.resourceIds?.length) {
+      resources
+        .filter((resource) => lesson.resourceIds.includes(resource.id))
+        .forEach((resource) => {
+          if (hasLegacySubjectText(resource.title)) {
+            resource.title = `ملخص ${lesson.title}`
+          }
+          resource.subjectId = lesson.subjectId
+        })
+      return
+    }
     const existing = resources.filter((resource) => resource.lessonId === lesson.id)
     if (existing.length) {
       lesson.resourceIds = existing.map((resource) => resource.id)
@@ -197,7 +256,7 @@ const normalizeSingleInstructor = (data) => {
   const exams = ensureCollection(data, 'exams')
   const attendance = ensureCollection(data, 'attendance')
   const announcements = ensureCollection(data, 'announcements')
-  ensureCollection(data, 'questions')
+  const questions = ensureCollection(data, 'questions')
   ensureCollection(data, 'attempts')
   ensureCollection(data, 'notifications')
   ensureCollection(data, 'activityLogs')
@@ -222,11 +281,15 @@ const normalizeSingleInstructor = (data) => {
   }
 
   const instructor = pickInstructor(data)
+  const savedProfile = data.settings.instructorProfile || {}
   instructor.role = 'teacher'
   instructor.status = 'approved'
+  instructor.hidden = false
   instructor.subjectIds = subjects.map((subject) => subject.id)
-  instructor.name = GLOBAL_INSTRUCTOR.name
-  instructor.bio = GLOBAL_INSTRUCTOR.bio
+  instructor.name = savedProfile.name || GLOBAL_INSTRUCTOR.name
+  instructor.email = 'teacher@academy.sa'
+  instructor.password = instructor.password || '123456'
+  instructor.bio = savedProfile.bio || GLOBAL_INSTRUCTOR.bio
   instructor.bio = instructor.bio || 'مدرس متخصص يقدم تجربة تعليمية شخصية ومنظمة.'
 
   data.settings.globalInstructorId = instructor.id
@@ -236,27 +299,43 @@ const normalizeSingleInstructor = (data) => {
   )
   data.settings.instructorProfile = {
     ...data.settings.instructorProfile,
-    name: GLOBAL_INSTRUCTOR.name,
-    title: GLOBAL_INSTRUCTOR.title,
-    bio: GLOBAL_INSTRUCTOR.bio,
-    headline: GLOBAL_INSTRUCTOR.headline,
-    experience: GLOBAL_INSTRUCTOR.experience
+    name: data.settings.instructorProfile.name || GLOBAL_INSTRUCTOR.name,
+    title: data.settings.instructorProfile.title || GLOBAL_INSTRUCTOR.title,
+    email: instructor.email,
+    bio: data.settings.instructorProfile.bio || GLOBAL_INSTRUCTOR.bio,
+    headline: data.settings.instructorProfile.headline || GLOBAL_INSTRUCTOR.headline,
+    experience: data.settings.instructorProfile.experience || GLOBAL_INSTRUCTOR.experience
   }
-  data.settings.academyName = PLATFORM_NAME
-  data.settings.tagline = PLATFORM_TAGLINE
-  data.settings.academyName = data.settings.academyName?.includes('أكاديمية')
-    ? 'منصة المدرس الشخصية'
-    : data.settings.academyName
-  data.settings.academyName = PLATFORM_NAME
-  data.settings.tagline = PLATFORM_TAGLINE
+  if (!data.settings.academyName || ['أكاديمية المعرفة', 'منصة المدرس الشخصية'].includes(data.settings.academyName)) {
+    data.settings.academyName = PLATFORM_NAME
+  }
+  if (!data.settings.tagline || ['نحو تعلم ذكي، سريع، وممتع', 'تعلم منظم ومريح مع مدرس واحد'].includes(data.settings.tagline)) {
+    data.settings.tagline = PLATFORM_TAGLINE
+  }
   data.settings.autoApproveTeachers = false
 
   users.forEach((user) => {
-    if (user.role === 'teacher' && user.id !== instructor.id) {
+    if (user.id === instructor.id) return
+
+    if (user.email?.toLowerCase() === 'teacher@academy.sa') {
+      user.email = `archived-${user.id}@academy.local`
+    }
+
+    if (user.role === 'admin') {
+      user.legacyRole = 'admin'
       user.hidden = true
-      user.status = user.status || 'archived'
+      user.status = 'archived'
+      return
+    }
+
+    if (user.role === 'teacher') {
+      user.legacyRole = 'teacher'
+      user.hidden = true
+      user.status = 'archived'
     }
   })
+
+  ensureAssistantAccount(data)
 
   ensureSections(data)
 
@@ -271,40 +350,78 @@ const normalizeSingleInstructor = (data) => {
   })
 
   subjects.forEach((subject, index) => {
-    const course = ARABIC_COURSES[index % ARABIC_COURSES.length]
+    const course = ARABIC_COURSES[index]
+    const code = String(subject.code || '')
+    const isDefaultArabicCourse = ARABIC_COURSES.some((item) => item.code === code)
+    const shouldApplyTemplate = !!course && (!code.startsWith('ARB') || isDefaultArabicCourse)
+
     subject.instructorId = instructor.id
-    subject.name = course.name
-    subject.code = course.code
-    subject.grade = course.grade
+    subject.subjectArea = 'arabic'
     subject.icon = 'BookOpenText'
-    subject.price = course.price
+    subject.code = code.startsWith('ARB') ? code : `ARB-${index + 1}`
     subject.currency = subject.currency || 'EGP'
-    subject.level = course.level || COURSE_LEVELS[index % COURSE_LEVELS.length]
     subject.published = subject.published ?? subject.active ?? true
-    subject.colorHex = course.colorHex || COURSE_COLORS[index % COURSE_COLORS.length]
+    subject.colorHex = subject.colorHex || COURSE_COLORS[index % COURSE_COLORS.length]
     subject.color = subject.colorHex
-    subject.description = course.description
+
+    if (shouldApplyTemplate) {
+      subject.name = course.name
+      subject.code = course.code
+      subject.grade = course.grade
+      subject.price = course.price
+      subject.level = course.level || COURSE_LEVELS[index % COURSE_LEVELS.length]
+      subject.colorHex = course.colorHex || COURSE_COLORS[index % COURSE_COLORS.length]
+      subject.color = subject.colorHex
+      subject.description = course.description
+    }
   })
 
   const sections = ensureCollection(data, 'sections')
   lessons.forEach((lesson, index) => {
+    const subject = subjects.find((item) => item.id === lesson.subjectId)
     const section = sections.find((item) => item.subjectId === lesson.subjectId)
+    const order = lesson.order || index + 1
+    const seededTitle = /^الدرس\s+\d+\s+-/.test(String(lesson.title || ''))
     if (lesson.teacherId && lesson.teacherId !== instructor.id && !lesson.legacyTeacherId) {
       lesson.legacyTeacherId = lesson.teacherId
     }
     lesson.teacherId = instructor.id
     lesson.sectionId = lesson.sectionId || section?.id || null
-    lesson.videoUrl = lesson.videoUrl || ''
+    lesson.videoUrl = lesson.videoUrl || DEFAULT_VIDEO_LINKS[index % DEFAULT_VIDEO_LINKS.length]
+    if (subject && (seededTitle || hasLegacySubjectText(lesson.title))) {
+      lesson.title = `الدرس ${order} - ${subject.name}`
+    }
+    if (subject && (!lesson.summary || hasLegacySubjectText(lesson.summary) || seededTitle)) {
+      lesson.summary = `شرح منظم للدرس ${order} من كورس ${subject.name} مع أمثلة وتدريبات تطبيقية.`
+    }
     lesson.content = lesson.content || lesson.summary || 'محتوى الدرس متاح داخل المشغل.'
+    if (subject && hasLegacySubjectText(lesson.content)) {
+      lesson.content = `محتوى عربي مبسط للدرس ${order} داخل كورس ${subject.name}.`
+    }
     lesson.resourceIds = asArray(lesson.resourceIds)
-    lesson.order = lesson.order || index + 1
+    lesson.order = order
   })
 
   exams.forEach((exam) => {
+    const subject = subjects.find((item) => item.id === exam.subjectId)
     if (exam.teacherId && exam.teacherId !== instructor.id && !exam.legacyTeacherId) {
       exam.legacyTeacherId = exam.teacherId
     }
     exam.teacherId = instructor.id
+    if (subject && hasLegacySubjectText(exam.title)) {
+      exam.title = exam.title?.includes('نهاية') ? `اختبار نهاية الفصل - ${subject.name}` : `اختبار منتصف الفصل - ${subject.name}`
+    }
+    if (subject && (!exam.description || hasLegacySubjectText(exam.description))) {
+      exam.description = `تقييم شامل لمحاور كورس ${subject.name}.`
+    }
+  })
+
+  questions.forEach((question) => {
+    if (!hasLegacySubjectText(question.text)) return
+    const exam = exams.find((item) => item.id === question.examId)
+    const subject = exam ? subjects.find((item) => item.id === exam.subjectId) : null
+    if (!subject) return
+    question.text = `سؤال ${question.order || 1} في ${subject.name}: اختر الإجابة الصحيحة من بين الاختيارات التالية.`
   })
 
   attendance.forEach((record) => {
@@ -315,10 +432,17 @@ const normalizeSingleInstructor = (data) => {
   })
 
   announcements.forEach((announcement) => {
+    const subject = subjects.find((item) => item.id === announcement.subjectId)
     if (announcement.authorId && announcement.authorId !== instructor.id && !announcement.legacyAuthorId) {
       announcement.legacyAuthorId = announcement.authorId
     }
     announcement.authorId = instructor.id
+    if (subject && hasLegacySubjectText(announcement.title)) {
+      announcement.title = `إعلان هام - ${subject.name}`
+    }
+    if (subject && hasLegacySubjectText(announcement.body)) {
+      announcement.body = `سيتم عقد مراجعة شاملة لكورس ${subject.name} يوم السبت القادم الساعة السابعة مساء.`
+    }
   })
 
   const coupons = ensureCollection(data, 'coupons')
@@ -339,7 +463,13 @@ const normalizeSingleInstructor = (data) => {
 
   const assignments = ensureCollection(data, 'assignments')
   subjects.forEach((subject, index) => {
-    const exists = assignments.some((assignment) => assignment.subjectId === subject.id)
+    const existingAssignments = assignments.filter((assignment) => assignment.subjectId === subject.id)
+    existingAssignments.forEach((assignment) => {
+      if (hasLegacySubjectText(assignment.title)) {
+        assignment.title = `تطبيق عملي - ${subject.name}`
+      }
+    })
+    const exists = existingAssignments.length > 0
     if (!exists) {
       assignments.push({
         id: uid('asg'),

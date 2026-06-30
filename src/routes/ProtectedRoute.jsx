@@ -5,7 +5,7 @@ import { ROLES } from '../utils/constants.js'
 const roleHome = {
   [ROLES.STUDENT]: '/student/dashboard',
   [ROLES.TEACHER]: '/teacher/dashboard',
-  [ROLES.ADMIN]: '/admin/dashboard'
+  [ROLES.ASSISTANT]: '/assistant/dashboard'
 }
 
 export const ProtectedRoute = ({ allow, children }) => {

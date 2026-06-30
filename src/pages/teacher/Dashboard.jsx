@@ -17,7 +17,8 @@ import {
   Megaphone,
   Plus,
   Receipt,
-  Settings
+  Settings,
+  UsersRound
 } from 'lucide-react'
 
 import { useAuth } from '../../context/AuthContext.jsx'
@@ -29,14 +30,26 @@ import { CourseCard } from '../../components/ui/CourseCard.jsx'
 import { db } from '../../db/database.js'
 import { formatDate, relativeTime } from '../../utils/date.js'
 import { EmptyState } from '../../components/ui/EmptyState.jsx'
+import { ROLES } from '../../utils/constants.js'
 
-const quickActions = [
-  { label: 'إضافة كورس', to: '/teacher/courses', icon: Plus },
-  { label: 'إدارة الدروس', to: '/teacher/lessons', icon: BookOpen },
-  { label: 'اختبار جديد', to: '/teacher/quizzes', icon: FileText },
-  { label: 'إعلان للطلاب', to: '/teacher/announcements', icon: Megaphone },
-  { label: 'إعدادات المدرس', to: '/teacher/settings', icon: Settings }
-]
+const getQuickActions = (role) => {
+  if (role === ROLES.TEACHER) {
+    return [
+      { label: 'إدارة المساعدين', to: '/teacher/assistants', icon: UsersRound },
+      { label: 'إعدادات المنصة', to: '/teacher/settings', icon: Settings },
+      { label: 'تقارير الأداء', to: '/teacher/reports', icon: FileText },
+      { label: 'طلبات الطلاب', to: '/teacher/orders', icon: Receipt }
+    ]
+  }
+
+  return [
+    { label: 'إضافة كورس', to: '/assistant/courses', icon: Plus },
+    { label: 'إدارة الدروس', to: '/assistant/lessons', icon: BookOpen },
+    { label: 'اختبار جديد', to: '/assistant/quizzes', icon: FileText },
+    { label: 'إعلان للطلاب', to: '/assistant/announcements', icon: Megaphone },
+    { label: 'تسجيل حضور', to: '/assistant/attendance', icon: UsersRound }
+  ]
+}
 
 const quickActionColors = [
   'bg-[#2563EB]',
@@ -49,6 +62,9 @@ const quickActionColors = [
 export default function TeacherDashboard() {
   const { user } = useAuth()
   const [data, setData] = useState(null)
+  const isOwner = user.role === ROLES.TEACHER
+  const basePath = isOwner ? '/teacher' : '/assistant'
+  const quickActions = useMemo(() => getQuickActions(user.role), [user.role])
 
   useEffect(() => {
     dashboardService.teacherMetrics(user.id).then(setData)
@@ -97,7 +113,7 @@ export default function TeacherDashboard() {
           <div>
             <div className="inline-flex w-fit items-center gap-2 rounded-full border border-[#0B6F7A]/15 bg-[#E8F8FA] px-4 py-2 text-xs font-black text-[#0B6F7A] dark:border-cyan-300/15 dark:bg-cyan-400/10 dark:text-cyan-300">
               <BookOpen size={15} />
-              لوحة المدرس
+              {isOwner ? 'لوحة المالك' : 'لوحة المساعد'}
             </div>
 
             <h2 className="mt-4 text-2xl font-black text-[#0B2B3F] dark:text-slate-50">
@@ -105,15 +121,17 @@ export default function TeacherDashboard() {
             </h2>
 
             <p className="mt-2 max-w-2xl text-sm font-medium leading-7 text-[#41596B] dark:text-slate-300">
-              إدارة شاملة لتجربة التعلم من مكان واحد، تابع الكورسات والطلاب والطلبات ونتائج الاختبارات بسهولة.
+              {isOwner
+                ? 'تابع أداء المنصة والطلبات والتقارير، وتحكم في إعدادات المنصة وحسابات المساعدين.'
+                : 'إدارة شاملة للكورسات والدروس والاختبارات والحضور والطلاب من مكان واحد.'}
             </p>
           </div>
 
           <Link
-            to="/teacher/courses"
+            to={isOwner ? '/teacher/assistants' : '/assistant/courses'}
             className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#075B78] px-5 py-3 text-sm font-black text-white shadow-xl shadow-[#075B78]/20 transition-all hover:-translate-y-0.5 hover:bg-[#064B64] dark:bg-cyan-500 dark:text-slate-950 dark:shadow-none dark:hover:bg-cyan-400"
           >
-            إدارة الكورسات
+            {isOwner ? 'إدارة المساعدين' : 'إدارة الكورسات'}
             <ArrowLeft size={16} />
           </Link>
         </div>
@@ -242,7 +260,7 @@ export default function TeacherDashboard() {
           title="آخر التسجيلات"
           action={
             <Link
-              to="/teacher/orders"
+              to={`${basePath}/orders`}
               className="text-sm font-black text-[#0B6F7A] hover:underline dark:text-cyan-300"
             >
               كل الطلبات
@@ -291,10 +309,10 @@ export default function TeacherDashboard() {
           title="آخر محاولات الاختبارات"
           action={
             <Link
-              to="/teacher/quizzes"
+              to={isOwner ? '/teacher/reports' : '/assistant/quizzes'}
               className="text-sm font-black text-[#0B6F7A] hover:underline dark:text-cyan-300"
             >
-              إدارة الاختبارات
+              {isOwner ? 'التقارير' : 'إدارة الاختبارات'}
             </Link>
           }
         >

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { useToast } from '../../context/ToastContext.jsx'
 import { attendanceService } from '../../services/attendanceService.js'
+import { singleInstructorService } from '../../services/singleInstructorService.js'
 import { db } from '../../db/database.js'
 import { Card, CardHeader } from '../../components/ui/Card.jsx'
 import { Select } from '../../components/ui/Input.jsx'
@@ -23,10 +24,11 @@ export default function TeacherAttendance() {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
+    const instructorId = singleInstructorService.getInstructorId()
     const allSubjects = db.all('subjects')
-    const teacherSubjects = user.subjectIds?.length
-      ? allSubjects.filter((subject) => user.subjectIds.includes(subject.id))
-      : allSubjects
+    const teacherSubjects = allSubjects.filter(
+      (subject) => subject.instructorId === instructorId || subject.published !== false
+    )
 
     setSubjects(teacherSubjects)
 
@@ -91,7 +93,7 @@ export default function TeacherAttendance() {
         status
       }))
 
-      await attendanceService.bulkMark(payload, user.id, subjectId)
+      await attendanceService.bulkMark(payload, singleInstructorService.getInstructorId(), subjectId)
 
       toast.success(`تم تسجيل الحضور (${payload.length} طالب)`)
 

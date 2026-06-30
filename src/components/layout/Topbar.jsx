@@ -9,8 +9,8 @@ import { ThemeToggle } from '../ui/ThemeToggle.jsx'
 
 const notifPath = {
   [ROLES.STUDENT]: '/student/notifications',
-  [ROLES.TEACHER]: '/teacher/announcements',
-  [ROLES.ADMIN]: '/admin/notifications'
+  [ROLES.TEACHER]: '/teacher/dashboard',
+  [ROLES.ASSISTANT]: '/assistant/announcements'
 }
 
 const getUserAvatar = (user) => {
@@ -20,8 +20,8 @@ const getUserAvatar = (user) => {
     user?.imageUrl ||
     user?.profileImageUrl ||
     user?.profileImage ||
-    user?.avatar ||"/images/user.webp"||
-    ''
+    user?.avatar ||
+    '/images/user.webp'
   )
 }
 

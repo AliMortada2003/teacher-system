@@ -4,6 +4,7 @@ import { useToast } from '../../context/ToastContext.jsx'
 import { lessonRepo } from '../../repositories/index.js'
 import { db } from '../../db/database.js'
 import { uid } from '../../utils/id.js'
+import { singleInstructorService } from '../../services/singleInstructorService.js'
 import { Card, CardHeader } from '../../components/ui/Card.jsx'
 import { Button } from '../../components/ui/Button.jsx'
 import { Modal } from '../../components/ui/Modal.jsx'
@@ -38,9 +39,10 @@ export default function LessonsManagement() {
   const [form, setForm] = useState(emptyForm())
 
   const load = async () => {
+    const instructorId = singleInstructorService.getInstructorId()
     const subs = db.all('subjects')
     const secs = db.all('sections')
-    const all = await lessonRepo.list((lesson) => lesson.teacherId === user.id)
+    const all = await lessonRepo.list((lesson) => lesson.teacherId === instructorId)
 
     setSubjects(subs)
     setSections(secs)
@@ -133,7 +135,7 @@ export default function LessonsManagement() {
       await lessonRepo.update(editing.id, { resourceIds })
       toast.success('تم تعديل الدرس')
     } else {
-      const created = await lessonRepo.create({ ...payload, teacherId: user.id, resourceIds: [] })
+      const created = await lessonRepo.create({ ...payload, teacherId: singleInstructorService.getInstructorId(), resourceIds: [] })
       const resourceIds = saveResource(created, form.resourceTitle?.trim())
       await lessonRepo.update(created.id, { resourceIds })
       toast.success('تم إضافة الدرس')

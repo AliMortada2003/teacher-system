@@ -27,6 +27,7 @@ export default function LessonPlayer() {
     const courseLessons = found
       ? db.all('lessons').filter((item) => item.subjectId === found.subjectId).sort((a, b) => (a.order || 0) - (b.order || 0))
       : []
+
     setLesson(found)
     setSubject(foundSubject)
     setLessons(courseLessons)
@@ -47,6 +48,9 @@ export default function LessonPlayer() {
       next: index >= 0 && index < lessons.length - 1 ? lessons[index + 1] : null
     }
   }, [id, lessons])
+
+  const embedUrl = useMemo(() => getEmbeddableVideoUrl(lesson?.videoUrl), [lesson?.videoUrl])
+  const directVideo = useMemo(() => isDirectVideoUrl(lesson?.videoUrl), [lesson?.videoUrl])
 
   const markComplete = () => {
     try {
@@ -70,7 +74,7 @@ export default function LessonPlayer() {
       <EmptyState
         icon={PlayCircle}
         title="هذا الدرس غير متاح بعد"
-        description="اشترك في الكورس أولاً لفتح الدروس والموارد."
+        description="اشترك في الكورس أولًا لفتح الدروس والموارد."
         action={<Link to="/student/courses" className="btn-primary">استكشاف الكورسات</Link>}
       />
     )
@@ -94,16 +98,44 @@ export default function LessonPlayer() {
 
         <Card className="!p-0 overflow-hidden">
           <div className="aspect-video bg-slate-950 text-white">
-            <div className="flex h-full items-center justify-center px-6 text-center">
-              <div>
-                <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-white/15 bg-white/10">
-                  <PlayCircle className="text-brand-200" size={42} />
+            {embedUrl ? (
+              <iframe
+                src={embedUrl}
+                title={lesson.title}
+                className="h-full w-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
+            ) : directVideo ? (
+              <video
+                className="h-full w-full bg-black"
+                controls
+                controlsList="nodownload"
+                src={lesson.videoUrl}
+              >
+                متصفحك لا يدعم تشغيل الفيديو.
+              </video>
+            ) : (
+              <div className="flex h-full items-center justify-center px-6 text-center">
+                <div>
+                  <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full border border-white/15 bg-white/10">
+                    <PlayCircle className="text-brand-200" size={42} />
+                  </div>
+                  <p className="text-2xl font-extrabold">{lesson.title}</p>
+                  <p className="mt-2 text-sm text-slate-300">
+                    {lesson.videoUrl ? 'رابط الفيديو غير قابل للتضمين داخل المشغل' : `${lesson.duration} دقيقة · ${subject?.name}`}
+                  </p>
                 </div>
-                <p className="text-2xl font-extrabold">{lesson.title}</p>
-                <p className="mt-2 text-sm text-slate-300">{lesson.duration} دقيقة · {subject?.name}</p>
               </div>
-            </div>
+            )}
           </div>
+
+          {!embedUrl && !directVideo && !lesson.videoUrl && (
+            <div className="border-t border-ink-100 bg-ink-50 px-5 py-3 text-sm font-bold text-ink-500">
+              لم يتم إضافة فيديو لهذا الدرس بعد.
+            </div>
+          )}
+
           <div className="border-t border-ink-100 p-5">
             <ProgressBar value={progress?.percentage || 0} />
           </div>
@@ -215,13 +247,40 @@ export default function LessonPlayer() {
           </div>
           <div className="mt-4 rounded-xl border border-ink-200 bg-ink-50 p-3 text-xs leading-6 text-ink-500">
             <NotebookPen className="mb-2 text-brand-600" size={16} />
-            استخدم الملاحظات أثناء المشاهدة، ثم حمّل الموارد قبل الانتقال للدرس التالي.
+            استخدم الملاحظات أثناء المشاهدة، ثم حمل الموارد قبل الانتقال للدرس التالي.
           </div>
         </Card>
       </aside>
     </div>
   )
 }
+
+const getEmbeddableVideoUrl = (url) => {
+  if (!url) return ''
+  try {
+    const parsed = new URL(url)
+    const host = parsed.hostname.replace(/^www\./, '')
+
+    if (host === 'youtu.be') {
+      return `https://www.youtube.com/embed/${parsed.pathname.slice(1)}`
+    }
+
+    if (host === 'youtube.com' || host === 'm.youtube.com') {
+      const watchId = parsed.searchParams.get('v')
+      if (watchId) return `https://www.youtube.com/embed/${watchId}`
+
+      const parts = parsed.pathname.split('/').filter(Boolean)
+      if (parts[0] === 'embed' && parts[1]) return `https://www.youtube.com/embed/${parts[1]}`
+      if (parts[0] === 'shorts' && parts[1]) return `https://www.youtube.com/embed/${parts[1]}`
+    }
+  } catch {
+    return ''
+  }
+
+  return ''
+}
+
+const isDirectVideoUrl = (url) => /\.(mp4|webm|ogg)(\?|#|$)/i.test(url || '')
 
 const InfoRow = ({ label, value }) => (
   <div className="flex items-center justify-between gap-3 rounded-xl border border-ink-200 bg-white px-3 py-2">

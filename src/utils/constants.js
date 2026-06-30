@@ -1,23 +1,23 @@
 export const ROLES = {
   STUDENT: 'student',
   TEACHER: 'teacher',
-  ADMIN: 'admin'
+  ASSISTANT: 'assistant'
 }
 
 export const ROLE_LABELS = {
   student: 'طالب',
-  teacher: 'المدرس',
-  admin: 'المالك'
+  teacher: 'المدرس المالك',
+  assistant: 'مساعد المدرس'
 }
 
 export const SUBJECT_SEED = [
-  { name: 'اللغة العربية', color: '#2563EB', colorHex: '#2563EB', icon: 'BookOpenText', code: 'ARB' },
-  { name: 'الفيزياء', color: '#4F46E5', colorHex: '#4F46E5', icon: 'Atom', code: 'PHY' },
-  { name: 'الكيمياء', color: '#14B8A6', colorHex: '#14B8A6', icon: 'FlaskConical', code: 'CHE' },
-  { name: 'الأحياء', color: '#22C55E', colorHex: '#22C55E', icon: 'Leaf', code: 'BIO' },
-  { name: 'البرمجة', color: '#334155', colorHex: '#334155', icon: 'Code2', code: 'CS' },
-  { name: 'الجيولوجيا', color: '#F59E0B', colorHex: '#F59E0B', icon: 'Mountain', code: 'GEO' },
-  { name: 'اللغة الفرنسية', color: '#64748B', colorHex: '#64748B', icon: 'Languages', code: 'FR' }
+  { name: 'عربي الصف الأول الثانوي', color: '#2563EB', colorHex: '#2563EB', icon: 'BookOpenText', code: 'ARB-1' },
+  { name: 'عربي الصف الثاني الثانوي', color: '#F97316', colorHex: '#F97316', icon: 'BookOpenText', code: 'ARB-2' },
+  { name: 'عربي الصف الثالث الثانوي', color: '#2563EB', colorHex: '#2563EB', icon: 'BookOpenText', code: 'ARB-3' },
+  { name: 'عربي الصف الأول الثانوي - نحو', color: '#F97316', colorHex: '#F97316', icon: 'BookOpenText', code: 'ARB-1-N' },
+  { name: 'عربي الصف الثاني الثانوي - بلاغة ونصوص', color: '#334155', colorHex: '#334155', icon: 'BookOpenText', code: 'ARB-2-B' },
+  { name: 'عربي الصف الثالث الثانوي - مراجعة شاملة', color: '#2563EB', colorHex: '#2563EB', icon: 'BookOpenText', code: 'ARB-3-R' },
+  { name: 'عربي الصف الثالث الثانوي - تدريبات الامتحان', color: '#F97316', colorHex: '#F97316', icon: 'BookOpenText', code: 'ARB-3-E' }
 ]
 
 export const ATTENDANCE_STATUS = {
@@ -58,27 +58,25 @@ export const NAV_STUDENT = [
 
 export const NAV_TEACHER = [
   { path: '/teacher/dashboard', label: 'الرئيسية', icon: 'LayoutDashboard' },
-  { path: '/teacher/courses', label: 'الكورسات', icon: 'BookMarked' },
-  { path: '/teacher/sections', label: 'الأقسام', icon: 'ListTree' },
-  { path: '/teacher/lessons', label: 'الدروس', icon: 'BookOpen' },
-  { path: '/teacher/quizzes', label: 'الاختبارات', icon: 'FileText' },
-  { path: '/teacher/assignments', label: 'الواجبات', icon: 'ClipboardList' },
-  { path: '/teacher/students', label: 'الطلاب', icon: 'GraduationCap' },
+  { path: '/teacher/assistants', label: 'المساعدين', icon: 'UsersRound' },
   { path: '/teacher/orders', label: 'الطلبات', icon: 'Receipt' },
-  { path: '/teacher/coupons', label: 'الكوبونات', icon: 'TicketPercent' },
-  { path: '/teacher/attendance', label: 'الحضور', icon: 'CalendarCheck' },
-  { path: '/teacher/announcements', label: 'الإعلانات', icon: 'Megaphone' },
   { path: '/teacher/reports', label: 'التقارير', icon: 'BarChart3' },
-  { path: '/teacher/settings', label: 'الإعدادات', icon: 'Settings' },
+  { path: '/teacher/settings', label: 'إعدادات المنصة', icon: 'Settings' },
   { path: '/teacher/profile', label: 'الملف الشخصي', icon: 'UserCircle' }
 ]
 
-export const NAV_ADMIN = [
-  { path: '/admin/dashboard', label: 'الرئيسية', icon: 'LayoutDashboard' },
-  { path: '/admin/students', label: 'الطلاب', icon: 'GraduationCap' },
-  { path: '/admin/subjects', label: 'الكورسات', icon: 'Library' },
-  { path: '/admin/exams', label: 'الاختبارات', icon: 'FileText' },
-  { path: '/admin/attendance', label: 'تحليلات الحضور', icon: 'BarChart3' },
-  { path: '/admin/notifications', label: 'الإشعارات', icon: 'Bell' },
-  { path: '/admin/settings', label: 'الإعدادات', icon: 'Settings' }
+export const NAV_ASSISTANT = [
+  { path: '/assistant/dashboard', label: 'الرئيسية', icon: 'LayoutDashboard' },
+  { path: '/assistant/courses', label: 'الكورسات', icon: 'BookMarked' },
+  { path: '/assistant/sections', label: 'الأقسام', icon: 'ListTree' },
+  { path: '/assistant/lessons', label: 'الدروس', icon: 'BookOpen' },
+  { path: '/assistant/quizzes', label: 'الاختبارات', icon: 'FileText' },
+  { path: '/assistant/assignments', label: 'الواجبات', icon: 'ClipboardList' },
+  { path: '/assistant/students', label: 'الطلاب', icon: 'GraduationCap' },
+  { path: '/assistant/orders', label: 'الطلبات', icon: 'Receipt' },
+  { path: '/assistant/coupons', label: 'الكوبونات', icon: 'TicketPercent' },
+  { path: '/assistant/attendance', label: 'الحضور والغياب', icon: 'CalendarCheck' },
+  { path: '/assistant/announcements', label: 'الإعلانات', icon: 'Megaphone' },
+  { path: '/assistant/reports', label: 'التقارير', icon: 'BarChart3' },
+  { path: '/assistant/profile', label: 'الملف الشخصي', icon: 'UserCircle' }
 ]

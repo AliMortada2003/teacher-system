@@ -15,6 +15,7 @@ const About = lazy(() => import('./pages/public/About.jsx'))
 const SubjectsPublic = lazy(() => import('./pages/public/Subjects.jsx'))
 const Login = lazy(() => import('./pages/public/Login.jsx'))
 const Register = lazy(() => import('./pages/public/Register.jsx'))
+const CourseDetails = lazy(() => import('./pages/shared/CourseDetails.jsx'))
 
 const Profile = lazy(() => import('./pages/shared/Profile.jsx'))
 const Leaderboard = lazy(() => import('./pages/shared/Leaderboard.jsx'))
@@ -46,16 +47,7 @@ const TeacherAttendance = lazy(() => import('./pages/teacher/AttendanceManagemen
 const Announcements = lazy(() => import('./pages/teacher/Announcements.jsx'))
 const Reports = lazy(() => import('./pages/teacher/Reports.jsx'))
 const InstructorSettings = lazy(() => import('./pages/teacher/InstructorSettings.jsx'))
-
-const AdminDashboard = lazy(() => import('./pages/admin/Dashboard.jsx'))
-const UsersManagement = lazy(() => import('./pages/admin/UsersManagement.jsx'))
-const StudentsManagement = lazy(() => import('./pages/admin/StudentsManagement.jsx'))
-const SubjectsManagement = lazy(() => import('./pages/admin/SubjectsManagement.jsx'))
-const AdminExamsManagement = lazy(() => import('./pages/admin/ExamsManagement.jsx'))
-const AttendanceAnalytics = lazy(() => import('./pages/admin/AttendanceAnalytics.jsx'))
-const LeaderboardControl = lazy(() => import('./pages/admin/LeaderboardControl.jsx'))
-const AdminNotifications = lazy(() => import('./pages/admin/Notifications.jsx'))
-const Settings = lazy(() => import('./pages/admin/Settings.jsx'))
+const AssistantsManagement = lazy(() => import('./pages/teacher/AssistantsManagement.jsx'))
 
 const LoadingScreen = () => (
   <div className="min-h-[50vh] flex items-center justify-center">
@@ -83,6 +75,7 @@ export default function App() {
               <Route path="grades" element={<Grades />} />
               <Route path="contact" element={<Contact />} />
               <Route path="subjects" element={<SubjectsPublic />} />
+              <Route path="subjects/:id" element={<CourseDetails />} />
             </Route>
 
             <Route path="/login" element={<PublicOnlyRoute><Login /></PublicOnlyRoute>} />
@@ -99,6 +92,7 @@ export default function App() {
               <Route index element={<Navigate to="dashboard" replace />} />
               <Route path="dashboard" element={<StudentDashboard />} />
               <Route path="courses" element={<CourseCatalog />} />
+              <Route path="courses/:id" element={<CourseDetails />} />
               <Route path="subjects" element={<MySubjects />} />
               <Route path="subjects/:id" element={<SubjectDetails />} />
               <Route path="lessons/:id" element={<LessonPlayer />} />
@@ -123,12 +117,30 @@ export default function App() {
             >
               <Route index element={<Navigate to="dashboard" replace />} />
               <Route path="dashboard" element={<TeacherDashboard />} />
+              <Route path="assistants" element={<AssistantsManagement />} />
+              <Route path="orders" element={<TeacherOrders />} />
+              <Route path="reports" element={<Reports />} />
+              <Route path="settings" element={<InstructorSettings />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="*" element={<Navigate to="/teacher/dashboard" replace />} />
+            </Route>
+
+            <Route
+              path="/assistant"
+              element={
+                <ProtectedRoute allow={[ROLES.ASSISTANT]}>
+                  <DashboardLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<Navigate to="dashboard" replace />} />
+              <Route path="dashboard" element={<TeacherDashboard />} />
               <Route path="courses" element={<TeacherSubjects />} />
-              <Route path="subjects" element={<Navigate to="/teacher/courses" replace />} />
+              <Route path="subjects" element={<Navigate to="/assistant/courses" replace />} />
               <Route path="sections" element={<SectionsManagement />} />
               <Route path="lessons" element={<LessonsManagement />} />
               <Route path="quizzes" element={<TeacherExams />} />
-              <Route path="exams" element={<Navigate to="/teacher/quizzes" replace />} />
+              <Route path="exams" element={<Navigate to="/assistant/quizzes" replace />} />
               <Route path="assignments" element={<AssignmentsManagement />} />
               <Route path="students" element={<TeacherStudents />} />
               <Route path="orders" element={<TeacherOrders />} />
@@ -137,31 +149,10 @@ export default function App() {
               <Route path="leaderboard" element={<Leaderboard />} />
               <Route path="announcements" element={<Announcements />} />
               <Route path="reports" element={<Reports />} />
-              <Route path="settings" element={<InstructorSettings />} />
               <Route path="profile" element={<Profile />} />
             </Route>
 
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute allow={[ROLES.ADMIN]}>
-                  <DashboardLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<Navigate to="dashboard" replace />} />
-              <Route path="dashboard" element={<AdminDashboard />} />
-              <Route path="users" element={<UsersManagement />} />
-              <Route path="students" element={<StudentsManagement />} />
-              <Route path="teachers" element={<Navigate to="/admin/settings" replace />} />
-              <Route path="subjects" element={<SubjectsManagement />} />
-              <Route path="exams" element={<AdminExamsManagement />} />
-              <Route path="attendance" element={<AttendanceAnalytics />} />
-              <Route path="leaderboard" element={<LeaderboardControl />} />
-              <Route path="notifications" element={<AdminNotifications />} />
-              <Route path="settings" element={<Settings />} />
-              <Route path="profile" element={<Profile />} />
-            </Route>
+            <Route path="/admin/*" element={<Navigate to="/teacher/dashboard" replace />} />
 
             <Route path="*" element={<NotFound />} />
             </Routes>

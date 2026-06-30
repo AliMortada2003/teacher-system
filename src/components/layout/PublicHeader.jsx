@@ -36,26 +36,22 @@ function getStoredAuth() {
         localStorage.getItem("authUser") ||
         localStorage.getItem("currentUser");
 
-    let user = null;
-
     try {
-        user = rawUser ? JSON.parse(rawUser) : null;
+        return { user: rawUser ? JSON.parse(rawUser) : null, token };
     } catch {
-        user = null;
+        return { user: null, token };
     }
-
-    return { user, token };
 }
 
 function getDashboardPath(user) {
     const role = String(user?.role || user?.userRole || "").toLowerCase();
 
-    if (role.includes("admin")) return "/admin-dashboard";
+    if (role.includes("assistant")) return "/assistant/dashboard";
     if (role.includes("teacher") || role.includes("instructor")) {
-        return "/teacher-dashboard";
+        return "/teacher/dashboard";
     }
 
-    return "/dashboard";
+    return "/student/dashboard";
 }
 
 function isActivePath(location, href) {

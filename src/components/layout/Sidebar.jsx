@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.jsx'
 import {
-  NAV_ADMIN,
+  NAV_ASSISTANT,
   NAV_STUDENT,
   NAV_TEACHER,
   ROLES,
@@ -29,6 +29,7 @@ import {
   TicketPercent,
   Trophy,
   UserCircle,
+  UsersRound,
   X
 } from 'lucide-react'
 import { db } from '../../db/database.js'
@@ -36,7 +37,7 @@ import { db } from '../../db/database.js'
 const NAV_MAP = {
   [ROLES.STUDENT]: NAV_STUDENT,
   [ROLES.TEACHER]: NAV_TEACHER,
-  [ROLES.ADMIN]: NAV_ADMIN
+  [ROLES.ASSISTANT]: NAV_ASSISTANT
 }
 
 const ICONS = {
@@ -59,7 +60,8 @@ const ICONS = {
   Settings,
   TicketPercent,
   Trophy,
-  UserCircle
+  UserCircle,
+  UsersRound
 }
 
 export const Sidebar = ({ open, onClose }) => {

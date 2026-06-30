@@ -108,10 +108,9 @@ export const dashboardService = {
     }
   },
 
-  async teacherMetrics(teacherId) {
+  async teacherMetrics() {
     await delay(100)
     const instructorId = singleInstructorService.getInstructorId()
-    if (teacherId && teacherId !== instructorId) return null
     const subjects = db.all('subjects')
     const exams = db.all('exams').filter((exam) => exam.teacherId === instructorId)
     const attempts = submittedAttempts().filter((attempt) => exams.some((exam) => exam.id === attempt.examId))

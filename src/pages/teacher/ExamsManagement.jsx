@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { useToast } from '../../context/ToastContext.jsx'
 import { examService } from '../../services/examService.js'
+import { singleInstructorService } from '../../services/singleInstructorService.js'
 import { db } from '../../db/database.js'
 import { SectionPanel } from '../../components/ui/Card.jsx'
 import { Button } from '../../components/ui/Button.jsx'
@@ -58,17 +59,18 @@ export default function TeacherExams() {
 
   const load = async () => {
     setLoading(true)
+    const instructorId = singleInstructorService.getInstructorId()
 
     const ownedSubjects = db
       .all('subjects')
       .filter(
         (subject) =>
-          user.subjectIds?.includes(subject.id) ||
-          subject.instructorId === user.id
+          subject.instructorId === instructorId ||
+          subject.published !== false
       )
       .sort((a, b) => a.name.localeCompare(b.name, 'ar'))
 
-    const list = await examService.listForTeacher(user.id)
+    const list = await examService.listForTeacher(instructorId)
 
     setSubjects(ownedSubjects)
     setExams(
@@ -245,7 +247,7 @@ export default function TeacherExams() {
       availableFrom,
       availableTo,
       questions,
-      teacherId: user.id
+      teacherId: singleInstructorService.getInstructorId()
     }
 
     try {

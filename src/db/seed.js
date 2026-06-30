@@ -45,8 +45,16 @@ export const seedData = () => {
   }))
 
   // USERS
-  const admin = mkUser(ROLES.ADMIN, 'مدير الأكاديمية', 'admin@academy.sa', { bio: 'مسؤول المنصة' })
-  const admin2 = mkUser(ROLES.ADMIN, 'أمين النظام', 'owner@academy.sa', { bio: 'مالك الأكاديمية' })
+  const owner = mkUser(ROLES.TEACHER, 'أ. أحمد المسعود', 'teacher@academy.sa', {
+    status: TEACHER_STATUS.APPROVED,
+    subjectIds: subjects.map((subject) => subject.id),
+    bio: 'مالك المنصة ومدرس اللغة العربية الرئيسي.'
+  })
+  const assistant = mkUser(ROLES.ASSISTANT, 'مساعد المدرس', 'assistant@academy.sa', {
+    status: 'active',
+    subjectIds: [],
+    bio: 'مساعد مسؤول عن إدارة الكورسات والدروس والاختبارات والحضور.'
+  })
 
   const teachers = TEACHER_NAMES.map((n, i) => {
     const subj = subjects[i % subjects.length]
@@ -76,7 +84,7 @@ export const seedData = () => {
     })
   })
 
-  const users = [admin, admin2, ...teachers, ...students]
+  const users = [owner, assistant, ...teachers, ...students]
 
   // LESSONS (per subject, 4-6 lessons)
   const lessons = []
@@ -226,7 +234,7 @@ export const seedData = () => {
 
   // ACTIVITY LOGS
   const activityLogs = [
-    { id: uid('log'), userId: admin.id, action: 'تسجيل دخول إلى النظام', createdAt: daysAgo(0) },
+    { id: uid('log'), userId: owner.id, action: 'تسجيل دخول إلى النظام', createdAt: daysAgo(0) },
     { id: uid('log'), userId: teachers[0].id, action: 'نشر امتحان جديد', createdAt: daysAgo(1) },
     { id: uid('log'), userId: students[0].id, action: 'أكمل اختبار الرياضيات', createdAt: daysAgo(2) }
   ]

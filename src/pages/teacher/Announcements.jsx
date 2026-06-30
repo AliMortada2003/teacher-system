@@ -15,6 +15,7 @@ import { useAuth } from '../../context/AuthContext.jsx'
 import { useToast } from '../../context/ToastContext.jsx'
 import { announcementRepo } from '../../repositories/index.js'
 import { notificationService } from '../../services/notificationService.js'
+import { singleInstructorService } from '../../services/singleInstructorService.js'
 import { db } from '../../db/database.js'
 import { Button } from '../../components/ui/Button.jsx'
 import { Modal } from '../../components/ui/Modal.jsx'
@@ -43,15 +44,16 @@ export default function Announcements() {
   const [subjectFilter, setSubjectFilter] = useState('')
 
   const load = async () => {
+    const instructorId = singleInstructorService.getInstructorId()
     const allSubjects = db.all('subjects')
-    const teacherSubjects = user.subjectIds?.length
-      ? allSubjects.filter((subject) => user.subjectIds.includes(subject.id))
-      : allSubjects
+    const teacherSubjects = allSubjects.filter(
+      (subject) => subject.instructorId === instructorId || subject.published !== false
+    )
 
     setSubjects(teacherSubjects)
 
     const allAnnouncements = await announcementRepo.list(
-      (announcement) => announcement.authorId === user.id
+      (announcement) => announcement.authorId === instructorId
     )
 
     setList(
@@ -160,7 +162,7 @@ export default function Announcements() {
     } else {
       await announcementRepo.create({
         ...payload,
-        authorId: user.id
+        authorId: singleInstructorService.getInstructorId()
       })
 
       const enrolledStudents = students.filter((student) =>
