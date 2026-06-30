@@ -27,8 +27,7 @@ const ICONS = {
 export const SubjectIcon = ({ subject, size = 20, className = '' }) => {
   if (!subject) return null
   const Icon = ICONS[subject.icon] || BookOpen
-  const backgroundColor = subject.colorHex || subject.color || '#2563EB'
-
+const backgroundColor = subject.colorHex || subject.color || '#0B6F7A'
   return (
     <div
       className={`inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/60 text-white shadow-none ${className}`}

@@ -1,9 +1,10 @@
 const toneStyles = {
-  brand: 'bg-brand-600',
-  accent: 'bg-accent-500',
-  emerald: 'bg-emerald-500',
+  brand: 'bg-[#0B6F7A] dark:bg-cyan-400',
+  accent: 'bg-[#089CC9] dark:bg-sky-400',
+  emerald: 'bg-[#14B8A6] dark:bg-emerald-400',
   danger: 'bg-red-500',
-  warning: 'bg-amber-500'
+  warning: 'bg-[#089CC9] dark:bg-sky-400',
+  gold: 'bg-[#0B6F7A] dark:bg-cyan-400'
 }
 
 export const ProgressBar = ({ value = 0, tone = 'brand', showLabel = true, className = '' }) => {
@@ -18,13 +19,16 @@ export const ProgressBar = ({ value = 0, tone = 'brand', showLabel = true, class
         </div>
       )}
       <div
-        className="h-2 overflow-hidden rounded-full border border-ink-200 bg-ink-100"
+        className="h-2 overflow-hidden rounded-full border border-[#DCEAF3] bg-[#EEF6F8] dark:border-slate-700 dark:bg-slate-800"
         role="progressbar"
         aria-valuenow={pct}
         aria-valuemin="0"
         aria-valuemax="100"
       >
-        <div className={`h-full rounded-full ${toneStyles[tone] || toneStyles.brand}`} style={{ width: `${pct}%` }} />
+        <div
+          className={`h-full rounded-full ${toneStyles[tone] || toneStyles.brand}`}
+          style={{ width: `${pct}%` }}
+        />
       </div>
     </div>
   )

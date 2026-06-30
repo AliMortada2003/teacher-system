@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { ArrowLeft, BookOpenText, Star } from 'lucide-react'
 
-const boardColors = ['#0F6673', '#136B4A', '#0F6673', '#0E5D6A', '#17634A']
+const boardColors = ['#0B6F7A', '#075B78', '#089CC9', '#0B2B3F', '#14B8A6']
 const formulaSets = [
   ['sin θ', 'Δy / Δx', '∞'],
   ['x² + y²', 'A = πr²', 'n ∑'],
@@ -31,10 +31,10 @@ export const CourseCard = (props) => {
   const formulaSet = formulaSets[seed % formulaSets.length]
 
   const content = (
-    <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-ink-200 bg-white shadow-soft transition-colors hover:border-brand-200">
+    <article className="group flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-[#DCEAF3] bg-white/85 shadow-lg shadow-[#0B5F7A]/10 backdrop-blur-xl transition-all hover:-translate-y-0.5 hover:border-[#0B6F7A]/25 dark:border-slate-700 dark:bg-slate-900/75 dark:shadow-none">
       <div className="relative h-[140px] overflow-hidden" style={{ backgroundColor: boardColor }}>
-        <div className="absolute right-4 top-4 z-10 inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-xs font-extrabold text-brand-700 shadow-sm">
-          <span className="h-2 w-2 rounded-full bg-brand-600" />
+        <div className="absolute right-4 top-4 z-10 inline-flex items-center gap-2 rounded-full bg-white/95 px-3 py-1.5 text-xs font-black text-[#0B6F7A] shadow-sm dark:bg-slate-900/90 dark:text-cyan-300">
+          <span className="h-2 w-2 rounded-full bg-[#0B6F7A] dark:bg-cyan-300" />
           {grade}
         </div>
 
@@ -64,13 +64,16 @@ export const CourseCard = (props) => {
           </span>
           <span>{duration || course.durationLabel || `${Math.max(lessonTotal, 1) * 45} د`}</span>
           <span className="inline-flex items-center gap-1">
-            <Star size={14} fill="#F59E0B" className="text-amber-500" />
+            <Star size={14} fill="#089CC9" className="text-[#089CC9]" />
             {rating}
           </span>
         </div>
 
         <div className="mt-5 flex items-center justify-between border-t border-ink-100 pt-5">
-          <p className="text-base font-extrabold text-brand-600">{course.currency || 'EGP'} {course.price}</p>
+          <p className
+            ="text-base font-black text-[#0B6F7A] dark:text-cyan-300">
+            {course.currency || 'EGP'} {course.price}
+          </p>
           {action || (
             <span className="inline-flex items-center gap-2 text-base font-extrabold text-ink-900 transition-colors group-hover:text-brand-600">
               عرض

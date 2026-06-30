@@ -5,49 +5,55 @@
 :root {
   color-scheme: light;
 
-  /* Brand */
-  --color-primary: #0050cf;
-  --color-primary-hover: #0044b3;
-  --color-primary-soft: #eaf2ff;
+  /* Brand - No Gold */
+  --color-primary: #0B6F7A;
+  --color-primary-hover: #075B78;
+  --color-primary-deep: #064B64;
+  --color-primary-soft: #E8F8FA;
 
-  --color-accent: #f7d719;
-  --color-accent-soft: #fff8bf;
+  --color-accent: #089CC9;
+  --color-accent-hover: #0784AA;
+  --color-accent-soft: #EAF7FC;
+
+  --color-mint: #14B8A6;
+  --color-mint-soft: #E8FBF8;
 
   /* Light Theme */
-  --color-background: #f6fafb;
-  --color-background-soft: #eef6f8;
-  --color-surface: #ffffff;
-  --color-surface-soft: #f8fafc;
+  --color-background: #F6FAFB;
+  --color-background-soft: #EEF6F8;
+  --color-surface: #FFFFFF;
+  --color-surface-soft: #F7FBFF;
 
-  --color-border: #e2e8f0;
-  --color-border-soft: #edf2f7;
+  --color-border: #DCEAF3;
+  --color-border-soft: #EAF2F6;
 
-  --color-heading: #0b2b3f;
-  --color-body: #475569;
-  --color-muted: #64748b;
+  --color-heading: #0B2B3F;
+  --color-body: #41596B;
+  --color-muted: #6B8293;
 
-  --shadow-card: 0 18px 45px rgba(15, 23, 42, 0.07);
-  --shadow-soft: 0 10px 28px rgba(15, 23, 42, 0.05);
+  --shadow-card: 0 18px 45px rgba(11, 95, 122, 0.10);
+  --shadow-soft: 0 10px 28px rgba(11, 95, 122, 0.07);
 }
 
 html.dark {
   color-scheme: dark;
 
-  --color-background: #0b1220;
+  --color-background: #0B1220;
   --color-background-soft: #111827;
   --color-surface: #111827;
-  --color-surface-soft: #0f172a;
+  --color-surface-soft: #0F172A;
 
-  --color-border: #1f2937;
+  --color-border: #1F2937;
   --color-border-soft: #243244;
 
-  --color-heading: #f8fafc;
-  --color-body: #cbd5e1;
-  --color-muted: #94a3b8;
+  --color-heading: #F8FAFC;
+  --color-body: #CBD5E1;
+  --color-muted: #94A3B8;
 
   --shadow-card: none;
   --shadow-soft: none;
 }
+
 html,
 body,
 #root {
@@ -113,7 +119,8 @@ body {
 
 @layer components {
   .surface {
-    @apply rounded-xl border border-ink-200 bg-white shadow-soft dark:border-slate-800 dark:bg-slate-900 dark:shadow-none;
+    @apply rounded-[1.5rem] border bg-white/85 shadow-soft backdrop-blur-xl transition-colors dark:bg-slate-900/75 dark:shadow-none;
+    border-color: var(--color-border);
   }
 
   .card,
@@ -122,7 +129,8 @@ body {
   }
 
   .panel-header {
-    @apply border-b border-ink-100 px-5 py-4 dark:border-slate-800;
+    @apply border-b px-5 py-4 dark:border-slate-800;
+    border-color: var(--color-border);
   }
 
   .panel-body {
@@ -130,23 +138,51 @@ body {
   }
 
   .btn {
-    @apply inline-flex min-h-10 items-center justify-center gap-2 rounded-xl px-3.5 py-2 text-sm font-bold leading-none transition-colors duration-150 focus:outline-none focus:ring-4 focus:ring-brand-100 disabled:pointer-events-none disabled:opacity-55 dark:focus:ring-brand-900/40;
+    @apply inline-flex min-h-10 items-center justify-center gap-2 rounded-xl px-3.5 py-2 text-sm font-black leading-none transition-all duration-150 focus:outline-none focus:ring-4 disabled:pointer-events-none disabled:opacity-55;
   }
 
   .btn-primary {
-    @apply btn bg-brand-600 text-white hover:bg-brand-700 dark:bg-brand-600 dark:hover:bg-brand-500;
+    @apply btn text-white shadow-lg hover:-translate-y-0.5 dark:text-slate-950 dark:shadow-none;
+    background: #075B78;
+    box-shadow: 0 14px 30px rgba(7, 91, 120, 0.18);
+  }
+
+  .btn-primary:hover {
+    background: #064B64;
+  }
+
+  .dark .btn-primary {
+    background: #22D3EE;
+  }
+
+  .dark .btn-primary:hover {
+    background: #67E8F9;
   }
 
   .btn-ghost {
-    @apply btn bg-transparent text-ink-700 hover:bg-ink-100 dark:text-slate-200 dark:hover:bg-slate-800;
+    @apply btn bg-transparent hover:-translate-y-0.5 dark:text-slate-200 dark:hover:bg-slate-800;
+    color: #41596B;
+  }
+
+  .btn-ghost:hover {
+    background: #E8F8FA;
+    color: #0B6F7A;
   }
 
   .btn-outline {
-    @apply btn border border-ink-200 bg-white text-ink-800 hover:border-brand-200 hover:bg-brand-50 hover:text-brand-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:border-brand-700 dark:hover:bg-slate-800 dark:hover:text-white;
+    @apply btn border bg-white/80 hover:-translate-y-0.5 dark:border-slate-700 dark:bg-slate-900/80 dark:text-slate-100 dark:hover:border-cyan-300/30 dark:hover:bg-slate-800 dark:hover:text-cyan-300;
+    border-color: #DCEAF3;
+    color: #0B2B3F;
+  }
+
+  .btn-outline:hover {
+    border-color: rgba(11, 111, 122, 0.28);
+    background: #E8F8FA;
+    color: #0B6F7A;
   }
 
   .btn-danger {
-    @apply btn bg-red-500 text-white hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-500;
+    @apply btn bg-red-500 text-white hover:-translate-y-0.5 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-500;
   }
 
   .field {
@@ -154,11 +190,28 @@ body {
   }
 
   .label {
-    @apply block text-xs font-bold text-ink-700 dark:text-slate-300;
+    @apply block text-xs font-black dark:text-slate-300;
+    color: #0B2B3F;
+  }
+
+  .dark .label {
+    color: #CBD5E1;
   }
 
   .input {
-    @apply h-11 w-full rounded-xl border border-ink-200 bg-white px-3.5 text-sm font-medium text-ink-900 outline-none transition-colors placeholder:text-ink-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-100 disabled:cursor-not-allowed disabled:bg-ink-50 disabled:text-ink-400 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-brand-500 dark:focus:ring-brand-900/40 dark:disabled:bg-slate-900 dark:disabled:text-slate-500;
+    @apply h-11 w-full rounded-xl border bg-white/90 px-3.5 text-sm font-bold outline-none transition-all placeholder:text-slate-400 focus:ring-4 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500 dark:disabled:bg-slate-900 dark:disabled:text-slate-500;
+    border-color: #DCEAF3;
+    color: #0B2B3F;
+  }
+
+  .input:focus {
+    border-color: #0B6F7A;
+    --tw-ring-color: rgba(11, 111, 122, 0.12);
+  }
+
+  .dark .input:focus {
+    border-color: #22D3EE;
+    --tw-ring-color: rgba(34, 211, 238, 0.18);
   }
 
   textarea.input {
@@ -166,15 +219,20 @@ body {
   }
 
   .chip {
-    @apply inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold leading-none dark:border-slate-700;
+    @apply inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-black leading-none dark:border-slate-700;
   }
 
   .table-head {
-    @apply whitespace-nowrap border-b border-ink-200 bg-ink-50 px-4 py-3 text-right text-xs font-extrabold uppercase text-ink-500 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-400;
+    @apply whitespace-nowrap border-b px-4 py-3 text-right text-xs font-black uppercase dark:border-slate-800 dark:bg-slate-950 dark:text-slate-400;
+    border-color: #DCEAF3;
+    background: #F7FBFF;
+    color: #6B8293;
   }
 
   .table-cell {
-    @apply border-t border-ink-100 px-4 py-3.5 align-middle text-sm font-medium text-ink-700 dark:border-slate-800 dark:text-slate-300;
+    @apply border-t px-4 py-3.5 align-middle text-sm font-bold dark:border-slate-800 dark:text-slate-300;
+    border-color: #EAF2F6;
+    color: #41596B;
   }
 
   .section {
@@ -186,19 +244,31 @@ body {
   }
 
   .heading-xl {
-    @apply text-3xl font-bold leading-tight text-ink-900 md:text-5xl dark:text-slate-50;
+    @apply text-3xl font-black leading-tight md:text-5xl dark:text-slate-50;
+    color: #0B2B3F;
   }
 
   .skeleton {
-    @apply rounded-xl border border-ink-200 bg-ink-100 animate-pulse dark:border-slate-800 dark:bg-slate-800;
+    @apply animate-pulse rounded-xl border dark:border-slate-800 dark:bg-slate-800;
+    border-color: #DCEAF3;
+    background: #EEF6F8;
   }
 
   .sidebar-item {
-    @apply flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold text-ink-600 outline-none transition-colors duration-150 hover:bg-ink-100 focus:ring-4 focus:ring-brand-100 dark:text-slate-300 dark:hover:bg-slate-800 dark:focus:ring-brand-900/40;
+    @apply flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-black outline-none transition-all duration-150 hover:-translate-x-0.5 dark:text-slate-300 dark:hover:bg-slate-800 dark:focus:ring-cyan-900/40;
+    color: #41596B;
+  }
+
+  .sidebar-item:hover {
+    background: #E8F8FA;
+    color: #0B6F7A;
   }
 
   .sidebar-item.active {
-    @apply border border-brand-100 bg-brand-50 text-brand-700 dark:border-brand-800 dark:bg-brand-900/20 dark:text-brand-200;
+    @apply border dark:border-cyan-300/20 dark:bg-cyan-400/10 dark:text-cyan-300;
+    border-color: rgba(11, 111, 122, 0.18);
+    background: #E8F8FA;
+    color: #0B6F7A;
   }
 }
 

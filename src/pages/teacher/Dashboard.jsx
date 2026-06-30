@@ -1,7 +1,25 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis
+} from 'recharts'
 import { Link } from 'react-router-dom'
-import { ArrowLeft, BookOpen, ClipboardList, FileText, Megaphone, Plus, Receipt, Settings, UserPlus } from 'lucide-react'
+import {
+  ArrowLeft,
+  BookOpen,
+  ClipboardList,
+  FileText,
+  Megaphone,
+  Plus,
+  Receipt,
+  Settings
+} from 'lucide-react'
+
 import { useAuth } from '../../context/AuthContext.jsx'
 import { dashboardService } from '../../services/dashboardService.js'
 import { StatCard } from '../../components/ui/StatCard.jsx'
@@ -20,6 +38,14 @@ const quickActions = [
   { label: 'إعدادات المدرس', to: '/teacher/settings', icon: Settings }
 ]
 
+const quickActionColors = [
+  'bg-[#2563EB]',
+  'bg-[#0B6F7A]',
+  'bg-[#16A34A]',
+  'bg-[#EA580C]',
+  'bg-[#334155]'
+]
+
 export default function TeacherDashboard() {
   const { user } = useAuth()
   const [data, setData] = useState(null)
@@ -30,13 +56,17 @@ export default function TeacherDashboard() {
 
   const derived = useMemo(() => {
     if (!data) return null
-    const orders = db.all('orders')
+
+    const orders = db
+      .all('orders')
       .filter((order) => order.status === 'paid')
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
       .slice(0, 5)
+
     const students = db.all('users').filter((item) => item.role === 'student' && !item.hidden)
     const lessons = db.all('lessons')
     const exams = db.all('exams')
+
     const courseRows = data.subjects.map((subject) => ({
       ...subject,
       lessonsCount: lessons.filter((lesson) => lesson.subjectId === subject.id).length,
@@ -48,27 +78,80 @@ export default function TeacherDashboard() {
   }, [data])
 
   if (!data || !derived) {
-    return <div className="grid gap-4 md:grid-cols-4">{Array.from({ length: 4 }).map((_, index) => <SkeletonCard key={index} />)}</div>
+    return (
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <SkeletonCard key={index} />
+        ))}
+      </div>
+    )
   }
 
   return (
     <div className="space-y-6">
-      <section className="px-2 py-2 text-center">
-        <h2 className="text-2xl font-extrabold text-ink-900">مرحباً بك، {user.name}</h2>
-        <p className="mt-2 text-sm font-medium text-ink-500">إدارة شاملة لتجربة التعلم من مكان واحد</p>
-        <div className="mt-4 flex justify-center">
-          <Link to="/teacher/courses" className="btn-primary">
+      <section className="relative overflow-hidden rounded-[2rem] border border-[#DCEAF3] bg-white/80 p-5 shadow-xl shadow-[#0B5F7A]/10 backdrop-blur-xl dark:border-slate-700 dark:bg-slate-900/70 dark:shadow-none">
+        <div className="pointer-events-none absolute -right-20 -top-20 h-52 w-52 rounded-full bg-[#BEE8F4]/45 blur-3xl dark:bg-cyan-400/10" />
+        <div className="pointer-events-none absolute -left-20 bottom-0 h-52 w-52 rounded-full bg-[#D8F0E9]/35 blur-3xl dark:bg-emerald-400/10" />
+
+        <div className="relative flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <div className="inline-flex w-fit items-center gap-2 rounded-full border border-[#0B6F7A]/15 bg-[#E8F8FA] px-4 py-2 text-xs font-black text-[#0B6F7A] dark:border-cyan-300/15 dark:bg-cyan-400/10 dark:text-cyan-300">
+              <BookOpen size={15} />
+              لوحة المدرس
+            </div>
+
+            <h2 className="mt-4 text-2xl font-black text-[#0B2B3F] dark:text-slate-50">
+              مرحباً بك، {user.name}
+            </h2>
+
+            <p className="mt-2 max-w-2xl text-sm font-medium leading-7 text-[#41596B] dark:text-slate-300">
+              إدارة شاملة لتجربة التعلم من مكان واحد، تابع الكورسات والطلاب والطلبات ونتائج الاختبارات بسهولة.
+            </p>
+          </div>
+
+          <Link
+            to="/teacher/courses"
+            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#075B78] px-5 py-3 text-sm font-black text-white shadow-xl shadow-[#075B78]/20 transition-all hover:-translate-y-0.5 hover:bg-[#064B64] dark:bg-cyan-500 dark:text-slate-950 dark:shadow-none dark:hover:bg-cyan-400"
+          >
             إدارة الكورسات
             <ArrowLeft size={16} />
           </Link>
         </div>
       </section>
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <StatCard title="الكورسات" value={data.subjects.length} icon="BookMarked" tone="brand" />
-        <StatCard title="الطلاب" value={data.totalStudents} icon="Users" tone="emerald" />
-        <StatCard title="الطلبات" value={data.orders} icon="Receipt" tone="gold" />
-        <StatCard title="الإيرادات" value={data.revenue} suffix="EGP" icon="Wallet" tone="accent" />
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
+        <StatCard
+          title="الكورسات"
+          value={data.subjects.length}
+          icon="BookMarked"
+          tone="blue"
+          description="إجمالي كورساتك داخل المنصة."
+        />
+
+        <StatCard
+          title="الطلاب"
+          value={data.totalStudents}
+          icon="Users"
+          tone="green"
+          description="عدد الطلاب المشتركين."
+        />
+
+        <StatCard
+          title="الطلبات"
+          value={data.orders}
+          icon="Receipt"
+          tone="orange"
+          description="طلبات الشراء والتسجيل."
+        />
+
+        <StatCard
+          title="الإيرادات"
+          value={data.revenue}
+          suffix="EGP"
+          icon="Wallet"
+          tone="burgundy"
+          description="إجمالي الإيرادات الحالية."
+        />
       </div>
 
       <div className="grid gap-5 xl:grid-cols-[minmax(0,1.35fr)_minmax(360px,0.9fr)]">
@@ -78,12 +161,46 @@ export default function TeacherDashboard() {
           ) : (
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={data.scoreBySubject}>
-                  <CartesianGrid stroke="#E5E7EB" vertical={false} />
-                  <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                  <YAxis tick={{ fontSize: 12, fill: '#64748B' }} axisLine={false} tickLine={false} />
-                  <Tooltip contentStyle={{ borderRadius: 12, borderColor: '#E5E7EB', boxShadow: 'none' }} />
-                  <Bar dataKey="avg" fill="#2563EB" radius={[8, 8, 0, 0]} />
+                <BarChart
+                  data={data.scoreBySubject}
+                  margin={{ top: 10, right: 8, left: 8, bottom: 0 }}
+                >
+                  <CartesianGrid
+                    stroke="#DCEAF3"
+                    vertical={false}
+                    strokeDasharray="4 4"
+                  />
+
+                  <XAxis
+                    dataKey="name"
+                    tick={{ fontSize: 12, fill: '#6B8293', fontWeight: 700 }}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+
+                  <YAxis
+                    tick={{ fontSize: 12, fill: '#6B8293', fontWeight: 700 }}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+
+                  <Tooltip
+                    contentStyle={{
+                      borderRadius: 18,
+                      borderColor: '#DCEAF3',
+                      background: 'rgba(255,255,255,0.95)',
+                      boxShadow: '0 18px 45px rgba(11,95,122,0.10)',
+                      fontWeight: 800
+                    }}
+                  />
+
+                  <Bar
+                    dataKey="avg"
+                    name="متوسط النتيجة"
+                    fill="#0B6F7A"
+                    radius={[10, 10, 0, 0]}
+                    barSize={34}
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -92,15 +209,28 @@ export default function TeacherDashboard() {
 
         <SectionPanel title="إجراءات سريعة">
           <div className="grid gap-2">
-            {quickActions.map((action) => (
-              <Link key={action.label} to={action.to} className="flex items-center justify-between rounded-xl border border-ink-200 bg-white p-3 transition-colors hover:border-brand-200 hover:bg-brand-50">
-                <span className="flex items-center gap-3 text-sm font-extrabold text-ink-800">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-ink-200 bg-ink-50 text-brand-600">
+            {quickActions.map((action, index) => (
+              <Link
+                key={action.label}
+                to={action.to}
+                className="group flex items-center justify-between rounded-2xl border border-[#DCEAF3] bg-white/75 p-3 shadow-sm transition-all hover:-translate-y-0.5 hover:border-[#0B6F7A]/25 hover:bg-[#F7FBFF] dark:border-slate-700 dark:bg-slate-900/60 dark:hover:border-cyan-300/30 dark:hover:bg-slate-800/80"
+              >
+                <span className="flex items-center gap-3 text-sm font-black text-[#0B2B3F] dark:text-slate-50">
+                  <span
+                    className={`flex h-10 w-10 items-center justify-center rounded-2xl text-white shadow-sm ${
+                      quickActionColors[index] || 'bg-[#334155]'
+                    }`}
+                  >
                     <action.icon size={17} />
                   </span>
+
                   {action.label}
                 </span>
-                <ArrowLeft size={15} className="text-ink-400" />
+
+                <ArrowLeft
+                  size={15}
+                  className="text-[#6B8293] transition-transform group-hover:-translate-x-1 group-hover:text-[#0B6F7A] dark:text-slate-400 dark:group-hover:text-cyan-300"
+                />
               </Link>
             ))}
           </div>
@@ -108,31 +238,66 @@ export default function TeacherDashboard() {
       </div>
 
       <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-        <SectionPanel title="آخر التسجيلات" action={<Link to="/teacher/orders" className="text-sm font-extrabold text-brand-600">كل الطلبات</Link>}>
+        <SectionPanel
+          title="آخر التسجيلات"
+          action={
+            <Link
+              to="/teacher/orders"
+              className="text-sm font-black text-[#0B6F7A] hover:underline dark:text-cyan-300"
+            >
+              كل الطلبات
+            </Link>
+          }
+        >
           {derived.orders.length === 0 ? (
             <EmptyState icon={Receipt} title="لا توجد طلبات مدفوعة بعد" />
           ) : (
-            <div className="overflow-hidden rounded-xl border border-ink-200">
-              <div className="grid grid-cols-[1fr_120px_110px] border-b border-ink-200 bg-ink-50 px-4 py-3 text-xs font-extrabold text-ink-500">
+            <div className="overflow-hidden rounded-2xl border border-[#DCEAF3] dark:border-slate-700">
+              <div className="grid grid-cols-[1fr_120px_110px] border-b border-[#DCEAF3] bg-[#F7FBFF] px-4 py-3 text-xs font-black text-[#6B8293] dark:border-slate-700 dark:bg-slate-950 dark:text-slate-400">
                 <span>الكورس</span>
                 <span>القيمة</span>
                 <span>التاريخ</span>
               </div>
+
               {derived.orders.map((order) => (
-                <div key={order.id} className="grid grid-cols-[1fr_120px_110px] items-center border-t border-ink-100 bg-white px-4 py-3 text-sm">
+                <div
+                  key={order.id}
+                  className="grid grid-cols-[1fr_120px_110px] items-center border-t border-[#EAF2F6] bg-white/70 px-4 py-3 text-sm transition-colors hover:bg-[#F7FBFF] dark:border-slate-800 dark:bg-slate-900/40 dark:hover:bg-slate-800/60"
+                >
                   <div className="min-w-0">
-                    <p className="truncate font-extrabold text-ink-900">{order.courseTitle}</p>
-                    <p className="truncate text-xs text-ink-500">{db.find('users', order.studentId)?.name || 'طالب'}</p>
+                    <p className="truncate font-black text-[#0B2B3F] dark:text-slate-50">
+                      {order.courseTitle}
+                    </p>
+
+                    <p className="truncate text-xs font-bold text-[#6B8293] dark:text-slate-400">
+                      {db.find('users', order.studentId)?.name || 'طالب'}
+                    </p>
                   </div>
-                  <p className="font-extrabold text-ink-900">{order.total} {order.currency}</p>
-                  <p className="text-xs text-ink-500">{formatDate(order.createdAt)}</p>
+
+                  <p className="font-black text-[#0B6F7A] dark:text-cyan-300">
+                    {order.total} {order.currency}
+                  </p>
+
+                  <p className="text-xs font-bold text-[#6B8293] dark:text-slate-400">
+                    {formatDate(order.createdAt)}
+                  </p>
                 </div>
               ))}
             </div>
           )}
         </SectionPanel>
 
-        <SectionPanel title="آخر محاولات الاختبارات" action={<Link to="/teacher/quizzes" className="text-sm font-extrabold text-brand-600">إدارة الاختبارات</Link>}>
+        <SectionPanel
+          title="آخر محاولات الاختبارات"
+          action={
+            <Link
+              to="/teacher/quizzes"
+              className="text-sm font-black text-[#0B6F7A] hover:underline dark:text-cyan-300"
+            >
+              إدارة الاختبارات
+            </Link>
+          }
+        >
           {data.recentAttempts.length === 0 ? (
             <EmptyState icon={ClipboardList} title="لا توجد محاولات" />
           ) : (
@@ -140,20 +305,36 @@ export default function TeacherDashboard() {
               {data.recentAttempts.map((attempt) => {
                 const student = db.find('users', attempt.studentId)
                 const exam = db.find('exams', attempt.examId)
+
                 return (
-                  <div key={attempt.id} className="flex items-center justify-between gap-3 rounded-xl border border-ink-200 bg-white p-3">
+                  <div
+                    key={attempt.id}
+                    className="flex items-center justify-between gap-3 rounded-2xl border border-[#DCEAF3] bg-white/75 p-3 shadow-sm transition-colors hover:bg-[#F7FBFF] dark:border-slate-700 dark:bg-slate-900/60 dark:hover:bg-slate-800/70"
+                  >
                     <div className="flex min-w-0 items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-600 text-sm font-bold text-white">
-                        {student?.name?.charAt(0)}
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-[#0B6F7A] text-sm font-black text-white shadow-sm">
+                        {student?.name?.charAt(0) || 'ط'}
                       </div>
+
                       <div className="min-w-0">
-                        <p className="truncate text-sm font-extrabold text-ink-900">{student?.name}</p>
-                        <p className="truncate text-xs text-ink-500">{exam?.title}</p>
+                        <p className="truncate text-sm font-black text-[#0B2B3F] dark:text-slate-50">
+                          {student?.name || 'طالب'}
+                        </p>
+
+                        <p className="truncate text-xs font-bold text-[#6B8293] dark:text-slate-400">
+                          {exam?.title || 'اختبار'}
+                        </p>
                       </div>
                     </div>
+
                     <div className="text-left">
-                      <p className="font-extrabold text-brand-600">{attempt.percentage}%</p>
-                      <p className="text-[11px] text-ink-400">{relativeTime(attempt.submittedAt)}</p>
+                      <p className="font-black text-[#0B6F7A] dark:text-cyan-300">
+                        {attempt.percentage}%
+                      </p>
+
+                      <p className="text-[11px] font-bold text-[#6B8293] dark:text-slate-400">
+                        {relativeTime(attempt.submittedAt)}
+                      </p>
                     </div>
                   </div>
                 )
@@ -162,22 +343,6 @@ export default function TeacherDashboard() {
           )}
         </SectionPanel>
       </div>
-
-      <SectionPanel title="الكورسات" action={<Link to="/teacher/courses" className="text-sm font-extrabold text-brand-600">تحرير الكورسات</Link>}>
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {derived.courseRows.map((subject) => (
-            <CourseCard
-              key={subject.id}
-              course={subject}
-              compact
-              lessonsCount={subject.lessonsCount}
-              quizzesCount={subject.quizzesCount}
-              studentsCount={subject.studentsCount}
-              action={<Link to="/teacher/courses" className="text-sm font-extrabold text-brand-600">تحرير</Link>}
-            />
-          ))}
-        </div>
-      </SectionPanel>
     </div>
   )
 }
